@@ -29,7 +29,13 @@ namespace Graphics3D.Drawing3D
         public void Save(String filename)
         {
             System.Xml.Schema.XmlSchema sh = new System.Xml.Schema.XmlSchema();
-            new XmlSerializer(typeof(Graphics3D.Drawing3D.Environment)).Serialize(XmlWriter.Create(filename), this);
+            XmlWriter x;
+            XmlWriterSettings s = new XmlWriterSettings();
+            s.CloseOutput = true;
+            s.Indent = true;
+            x = XmlWriter.Create(filename,s);
+            new XmlSerializer(typeof(Graphics3D.Drawing3D.Environment)).Serialize(x, this);
+            x.Close();
         }
 
     }

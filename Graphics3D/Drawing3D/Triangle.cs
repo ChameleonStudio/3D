@@ -12,7 +12,7 @@ namespace Graphics3D.Drawing3D
     public class Triangle
     {
         Point3D p1 = new Point3D(),p2 = new Point3D(),p3 = new Point3D();
-        MyColor fillColor = new MyColor(Color.White);
+        /*MyColor fillColor = new MyColor(Color.White);
 
         [XmlAttribute()]
         public MyColor FillColor
@@ -20,6 +20,16 @@ namespace Graphics3D.Drawing3D
             get { return fillColor; }
             set { fillColor = value; }
         }
+        */
+
+        Color color = Color.White;
+        public String FillColor
+        {
+            get { return color.Name; }
+            set { color = Color.FromName(value); }
+        }
+
+
 
         public Point3D P1 { get { return p1; } set { p1 = value; } }
         public Point3D P2 { get { return p2; } set { p2 = value; } }

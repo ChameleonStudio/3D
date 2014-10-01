@@ -12,13 +12,22 @@ namespace Graphics3D.Drawing3D
     public class Line 
     {
         Point3D p1 = new Point3D(),p2 = new Point3D();
-        MyColor borderColor = new MyColor(Color.Black);
+        //MyColor borderColor = new MyColor(Color.Black);
 
+        /*
         [XmlAttribute()]
         public MyColor BorderColor
         {
             get { return borderColor; }
             set { borderColor = value; }
+        }
+         */
+
+        Color color = Color.Black;
+        public String BorderColor
+        {
+            get { return color.Name; }
+            set { color = Color.FromName(value); }
         }
 
         public Point3D P1 { get { return p1; } set { p1 = value; } }
