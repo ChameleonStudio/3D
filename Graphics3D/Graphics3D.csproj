@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,7 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drawing3D\Camera.cs" />
+    <Compile Include="Drawing3D\Environment.cs" />
     <Compile Include="Drawing3D\Figure.cs" />
+    <Compile Include="Drawing3D\Line.cs" />
+    <Compile Include="Drawing3D\MyColor.cs" />
+    <Compile Include="Drawing3D\Point2D.cs" />
+    <Compile Include="Drawing3D\Point3D.cs" />
+    <Compile Include="Drawing3D\Poligon.cs" />
+    <Compile Include="Drawing3D\Triangle.cs" />
     <Compile Include="Math3D\Matrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

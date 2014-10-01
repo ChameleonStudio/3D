@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Graphics3D.Math3D
 {
-    class Matrix
+    public class Matrix
     {
         int width, height;
 
