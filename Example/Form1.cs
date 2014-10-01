@@ -38,7 +38,12 @@ namespace Example
             E.Figures.Add(f);
             E.Camera.Target = new Point3D(1, 1, 1);
 
-            E.Save(System.Environment.CurrentDirectory + "\\f.xml");
+            Graphics3D.Drawing3D.Environment.Save(System.Environment.CurrentDirectory + "\\f.xml", E);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Graphics3D.Drawing3D.Environment.Load(System.Environment.CurrentDirectory + "\\f.xml");
         }
 
      }
