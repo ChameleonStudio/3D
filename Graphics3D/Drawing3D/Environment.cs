@@ -27,7 +27,6 @@ namespace Graphics3D.Drawing3D
             set { figures = value; }
         }
 
-        //Matrix e = new Matrix(4);
         public void Transform(Matrix Rotate , Matrix Scale, Matrix Translate, Matrix Perspective)
         {
             Matrix transformation = new Matrix(4);
@@ -36,13 +35,8 @@ namespace Graphics3D.Drawing3D
             {
                 for (int i = 0; i < f.Points.Count; i++)
                 {
-                    f.Points[i] = f.Points[i] * transformation;
+                    f.Points[i].Transform(transformation);
                 }
-               /* for (int i = 0; i < f.Lines.Count; i++)
-                {
-                    f.Lines[i].P1 = f.Lines[i].P1 * transformation;
-                    f.Lines[i].P2 = f.Lines[i].P2 * transformation;
-                }*/
             }
         }
 
@@ -53,8 +47,10 @@ namespace Graphics3D.Drawing3D
             foreach (Figure f in Figures)
             {
                 foreach (Line l in f.Lines)
-                {//
-                    g.DrawLine(new Pen(Color.FromName(l.BorderColor), 1), new Point3D(-l.P1.Y + height / 2, l.P1.X + width / 2, l.P1.Z), new Point3D(-l.P2.Y + height / 2, l.P2.X + width / 2, l.P2.Z));
+                {
+                    g.DrawLine(new Pen(Color.FromName(l.BorderColor), 1),
+                        new Point3D(l.P1.X * (1000 / (1000 - l.P1.Z)) + width / 2, -l.P1.Y * (1000 / (1000 - l.P1.Z)) + height / 2, 1),
+                        new Point3D(l.P2.X * (1000 / (1000 - l.P2.Z)) + width / 2, -l.P2.Y * (1000 / (1000 - l.P2.Z)) + height / 2, 1));
                 }
             }
             return b;

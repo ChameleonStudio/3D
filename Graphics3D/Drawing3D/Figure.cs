@@ -14,11 +14,11 @@ namespace Graphics3D.Drawing3D
     public class Figure
     {
 
-        ArrayList points = new ArrayList();
-        ArrayList triangles = new ArrayList();
-        ArrayList lines = new ArrayList();
+        List<Point3D> points = new List<Point3D>();
+        List<Triangle> triangles = new List<Triangle>();
+        List<Line> lines = new List<Line>();
 
-        
+
         public List<Line> Lines
         {
             get { return lines; }
@@ -49,7 +49,7 @@ namespace Graphics3D.Drawing3D
 
         public void AddTriangle(int index1, int index2,int index3)
         {
-            Triangles.Add(new Triangle(Points[index1], Points[index2], Points[index3]));
+            Triangles.Add(new Triangle(Points[index1], Points[index2],Points[index3]));
         }
 
         public void AddTriangle(Triangle triangle)

@@ -140,9 +140,9 @@ namespace Graphics3D.Math3D
 
         public static Matrix GetRotationMatrix(double a, double b, double g)
         {
-            double ar =ToRadian(a);
+            double ar =ToRadian(g);
             double br=ToRadian(b);
-            double gr=ToRadian(g);
+            double gr=ToRadian(a);
 
             Matrix m = new double[,]{
             {Math.Cos(ar)*Math.Cos(br),                                          -Math.Cos(br)*Math.Sin(ar),                                          -Math.Sin(br),               0},
