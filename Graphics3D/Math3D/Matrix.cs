@@ -81,16 +81,17 @@ namespace Graphics3D.Math3D
             Matrix m;
             if (m1.Width == m2.Height)
             {
-                m = new Matrix(m2.Width, m1.Height);
-                for (int i = 0; i < m2.Width; i++)
+                m = new Matrix(m1.Height, m2.Width);
+                for (int i = 0; i < m.Width; i++)
                 {
-                    for (int j = 0; j < m1.Height; j++)
+                    for (int j = 0; j < m.Height; j++)
                     {
                         double sum = 0;
                         for (int q = 0; q < m1.Width; q++)
                         {
                             sum += m1[j, q] * m2[q, i];
                         }
+                        m[j, i] = sum;
                     }
                 }
             }

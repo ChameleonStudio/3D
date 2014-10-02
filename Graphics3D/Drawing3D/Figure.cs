@@ -14,9 +14,9 @@ namespace Graphics3D.Drawing3D
     public class Figure
     {
 
-        List<Point3D> points = new List<Point3D>();
-        List<Triangle> triangles = new List<Triangle>();
-        List<Line> lines = new List<Line>();
+        ArrayList points = new ArrayList();
+        ArrayList triangles = new ArrayList();
+        ArrayList lines = new ArrayList();
 
         
         public List<Line> Lines

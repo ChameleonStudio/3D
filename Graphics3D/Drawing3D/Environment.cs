@@ -4,6 +4,8 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Graphics3D.Math3D;
+using System.Drawing;
 
 namespace Graphics3D.Drawing3D
 {
@@ -19,24 +21,63 @@ namespace Graphics3D.Drawing3D
             set { camera = value; }
         }
 
-
         public List<Figure> Figures
         {
             get { return figures; }
             set { figures = value; }
         }
 
-        public void Save(String filename)
+        //Matrix e = new Matrix(4);
+        public void Transform(Matrix Rotate , Matrix Scale, Matrix Translate, Matrix Perspective)
         {
-            System.Xml.Schema.XmlSchema sh = new System.Xml.Schema.XmlSchema();
+            Matrix transformation = new Matrix(4);
+            transformation *= Rotate * Scale * Translate * Perspective;
+            foreach(Figure f in Figures)
+            {
+                for (int i = 0; i < f.Points.Count; i++)
+                {
+                    f.Points[i] = f.Points[i] * transformation;
+                }
+               /* for (int i = 0; i < f.Lines.Count; i++)
+                {
+                    f.Lines[i].P1 = f.Lines[i].P1 * transformation;
+                    f.Lines[i].P2 = f.Lines[i].P2 * transformation;
+                }*/
+            }
+        }
+
+        public Bitmap GetImage(int width, int height)
+        {
+            Bitmap b = new Bitmap(width, height);
+            Graphics g = Graphics.FromImage(b);
+            foreach (Figure f in Figures)
+            {
+                foreach (Line l in f.Lines)
+                {//
+                    g.DrawLine(new Pen(Color.FromName(l.BorderColor), 1), new Point3D(-l.P1.Y + height / 2, l.P1.X + width / 2, l.P1.Z), new Point3D(-l.P2.Y + height / 2, l.P2.X + width / 2, l.P2.Z));
+                }
+            }
+            return b;
+        }
+
+        public static void Save(String filename, Environment environment)
+        {
             XmlWriter x;
             XmlWriterSettings s = new XmlWriterSettings();
             s.CloseOutput = true;
             s.Indent = true;
             x = XmlWriter.Create(filename,s);
-            new XmlSerializer(typeof(Graphics3D.Drawing3D.Environment)).Serialize(x, this);
+            new XmlSerializer(typeof(Graphics3D.Drawing3D.Environment)).Serialize(x, environment);
             x.Close();
         }
 
+        public static Environment Load(String filename)
+        {
+            XmlReader x;
+            x = XmlReader.Create(filename);
+            Environment environment = (Environment)new XmlSerializer(typeof(Graphics3D.Drawing3D.Environment)).Deserialize(x);
+            x.Close();
+            return environment;
+        }
     }
 }
