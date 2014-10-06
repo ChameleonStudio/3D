@@ -13,7 +13,7 @@ namespace Graphics3D.Drawing3D
     public class Environment
     {
         Camera camera = new Camera();
-        List<Figure> figures = new List<Figure>();
+        Dictionary<String,Figure> figures = new Dictionary<String, Figure>();
 
         public Camera Camera
         {
@@ -21,22 +21,61 @@ namespace Graphics3D.Drawing3D
             set { camera = value; }
         }
 
-        public List<Figure> Figures
+        public Dictionary<String, Figure> Figures
         {
             get { return figures; }
             set { figures = value; }
         }
 
-        public void Transform(Matrix Rotate , Matrix Scale, Matrix Translate, Matrix Perspective)
+        public void Transform(Matrix matrix4x4)
+        {
+            foreach (Figure f in Figures.Values)
+            {
+                for (int i = 0; i < f.Vertexes.Count; i++)
+                {
+                    f.Vertexes[i].Transform(matrix4x4);
+                }
+            }
+        }
+
+        void transform(Matrix Rotate, Matrix Scale, Matrix Translate)
         {
             Matrix transformation = new Matrix(4);
-            transformation *= Rotate * Scale * Translate * Perspective;
-            foreach(Figure f in Figures)
+            transformation *= Rotate * Scale * Translate;
+            foreach(Figure f in Figures.Values)
             {
-                for (int i = 0; i < f.Points.Count; i++)
+                for (int i = 0; i < f.Vertexes.Count; i++)
                 {
-                    f.Points[i].Transform(transformation);
+                    f.Vertexes[i].Transform(transformation);
                 }
+            }
+        }
+
+        Transformation angle = new Transformation(),
+                       scale = new Transformation(1,1,1),
+                       translate = new Transformation();
+
+        public Transformation Translate
+        {
+            get { return translate; }
+            set { translate = value;
+            transform(Matrix.GetRotationMatrix(Angle), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
+            }
+        }
+
+        public Transformation Scale
+        {
+            get { return scale; }
+            set { scale = value;
+            transform(Matrix.GetRotationMatrix(Angle), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
+            }
+        }
+
+        public Transformation Angle
+        {
+            get { return angle; }
+            set { angle = value;
+            transform(Matrix.GetRotationMatrix(Angle), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
             }
         }
 
@@ -44,16 +83,22 @@ namespace Graphics3D.Drawing3D
         {
             Bitmap b = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(b);
-            foreach (Figure f in Figures)
+            double z = -500;
+            foreach (Figure f in Figures.Values)
             {
                 foreach (Line l in f.Lines)
                 {
                     g.DrawLine(new Pen(Color.FromName(l.BorderColor), 1),
-                        new Point3D(l.P1.X * (1000 / (1000 - l.P1.Z)) + width / 2, -l.P1.Y * (1000 / (1000 - l.P1.Z)) + height / 2, 1),
-                        new Point3D(l.P2.X * (1000 / (1000 - l.P2.Z)) + width / 2, -l.P2.Y * (1000 / (1000 - l.P2.Z)) + height / 2, 1));
+                        new Point3D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + height / 2, 1),
+                        new Point3D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + height / 2, 1));
                 }
             }
             return b;
+        }
+
+        public void AddFigure(Figure figure)
+        {
+            Figures.Add(figure.Name, figure);
         }
 
         public static void Save(String filename, Environment environment)

@@ -48,7 +48,9 @@
     <Compile Include="Drawing3D\Point2D.cs" />
     <Compile Include="Drawing3D\Point3D.cs" />
     <Compile Include="Drawing3D\Poligon.cs" />
+    <Compile Include="Drawing3D\Transformation.cs" />
     <Compile Include="Drawing3D\Triangle.cs" />
+    <Compile Include="Drawing3D\Vertex.cs" />
     <Compile Include="Math3D\Matrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

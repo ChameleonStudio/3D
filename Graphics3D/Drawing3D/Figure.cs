@@ -13,8 +13,20 @@ namespace Graphics3D.Drawing3D
     [Serializable]
     public class Figure
     {
+        String name;
 
-        List<Point3D> points = new List<Point3D>();
+        public Figure(String name)
+        {
+            Name = name;
+        }
+
+        public String Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        List<Vertex> vertexses = new List<Vertex>();
         List<Triangle> triangles = new List<Triangle>();
         List<Line> lines = new List<Line>();
 
@@ -25,10 +37,10 @@ namespace Graphics3D.Drawing3D
             set { lines = value; }
         }
 
-        public List<Point3D> Points
+        public List<Vertex> Vertexes
         {
-            get { return points; }
-            set { points = value; }
+            get { return vertexses; }
+            set { vertexses = value; }
         }
 
         public List<Triangle> Triangles
@@ -39,7 +51,7 @@ namespace Graphics3D.Drawing3D
 
         public void AddLine(int index1, int index2)
         {
-            Lines.Add(new Line(Points[index1], Points[index2]));
+            Lines.Add(new Line(Vertexes[index1], Vertexes[index2]));
         }
 
         public void AddLine(Line line)
@@ -49,7 +61,7 @@ namespace Graphics3D.Drawing3D
 
         public void AddTriangle(int index1, int index2,int index3)
         {
-            Triangles.Add(new Triangle(Points[index1], Points[index2],Points[index3]));
+            Triangles.Add(new Triangle(Vertexes[index1], Vertexes[index2],Vertexes[index3]));
         }
 
         public void AddTriangle(Triangle triangle)
@@ -66,7 +78,7 @@ namespace Graphics3D.Drawing3D
         {
             Poligon poligon = new Poligon();
             foreach (int index in indexes)
-                poligon.Points.Add(Points[index]);
+                poligon.Points.Add(Vertexes[index]);
             AddPoligon(poligon);
         }
 

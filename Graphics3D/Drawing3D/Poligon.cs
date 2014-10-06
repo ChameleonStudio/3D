@@ -10,14 +10,14 @@ namespace Graphics3D.Drawing3D
     {
         public Poligon(){}
 
-        public Poligon(params Point3D[] points)
+        public Poligon(params Vertex[] points)
         {
             this.points.AddRange(points);
         }
 
-        List<Point3D> points = new List<Point3D>();
+        List<Vertex> points = new List<Vertex>();
 
-        public List<Point3D> Points
+        public List<Vertex> Points
         {
             get { return points; }
         }

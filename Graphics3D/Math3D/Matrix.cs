@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Graphics3D.Drawing3D;
 
 namespace Graphics3D.Math3D
 {
@@ -138,11 +139,11 @@ namespace Graphics3D.Math3D
             return s.ToString();
         }
 
-        public static Matrix GetRotationMatrix(double a, double b, double g)
+        public static Matrix GetRotationMatrix(Transformation transformation)
         {
-            double ar =ToRadian(g);
-            double br=ToRadian(b);
-            double gr=ToRadian(a);
+            double ar =ToRadian(transformation.OZ);
+            double br=ToRadian(transformation.OY);
+            double gr=ToRadian(transformation.OX);
 
             Matrix m = new double[,]{
             {Math.Cos(ar)*Math.Cos(br),                                          -Math.Cos(br)*Math.Sin(ar),                                          -Math.Sin(br),               0},
@@ -191,12 +192,12 @@ namespace Graphics3D.Math3D
         }
 
 
-        public static Matrix GetScaleMatrix(double x, double y, double z)
+        public static Matrix GetScaleMatrix(Transformation transformation)
         {
             Matrix m = new double[,]{
-            {x, 0, 0, 0},
-            {0, y, 0, 0},
-            {0, 0, z, 0},
+            {transformation.OX, 0, 0, 0},
+            {0, transformation.OY, 0, 0},
+            {0, 0, transformation.OZ, 0},
             {0, 0, 0, 1}
             };
             return m;
@@ -213,13 +214,13 @@ namespace Graphics3D.Math3D
             return m;
         }
 
-        public static Matrix GetTranslateMatrix(double x, double y, double z)
+        public static Matrix GetTranslateMatrix(Transformation transformation)
         {
             Matrix m = new double[,]{
-            {0, 0, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0},
-            {x, y, z, 1}
+            {1, 0, 0, 0},
+            {0, 1, 0, 0},
+            {0, 0, 1, 0},
+            {transformation.OX, transformation.OY, transformation.OZ, 1}
             };
             return m;
         }
