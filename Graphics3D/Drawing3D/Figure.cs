@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Drawing;
 using Graphics3D;
 using Graphics3D.Drawing3D;
 using Graphics3D.Math3D;
@@ -149,5 +150,37 @@ namespace Graphics3D.Drawing3D
             get { return selected; }
             set { selected = value; }
         }
+
+        public static Figure GetCube(String name, Color color)
+        {
+            Figure f = new Figure(name);
+            f.Vertexes.Add(new Vertex(1, 1, 1)); //0
+            f.Vertexes.Add(new Vertex(1, -1, 1)); //1
+            f.Vertexes.Add(new Vertex(-1, -1, 1)); //2
+            f.Vertexes.Add(new Vertex(-1, 1, 1)); //3
+            f.Vertexes.Add(new Vertex(1, 1, -1)); //4
+            f.Vertexes.Add(new Vertex(1, -1, -1)); //5
+            f.Vertexes.Add(new Vertex(-1, -1, -1)); //6
+            f.Vertexes.Add(new Vertex(-1, 1, -1)); //7
+            f.AddLine(0, 1);
+            f.AddLine(1, 2);
+            f.AddLine(2, 3);
+            f.AddLine(3, 0);
+
+            f.AddLine(4, 5);
+            f.AddLine(5, 6);
+            f.AddLine(6, 7);
+            f.AddLine(7, 4);
+
+            f.AddLine(0, 4);
+            f.AddLine(1, 5);
+            f.AddLine(2, 6);
+            f.AddLine(3, 7);
+
+            foreach (Line l in f.Lines)
+                l.BorderColor = color;
+            return f;
+        }
+
     }
 }

@@ -126,6 +126,8 @@ namespace Example
             Letter.AddLine(7, 15);
             E.Figures.Add(Letter.Name, Letter);
 
+            Figure cube = Figure.GetCube("CUBE1", Color.RoyalBlue);
+            E.Figures.Add(cube.Name, cube);
 
             Figure f3 = new Figure("Cords");
             f3.Vertexes.Add(new Vertex(0, 0, 0));
