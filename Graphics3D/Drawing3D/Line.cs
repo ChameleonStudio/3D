@@ -28,11 +28,16 @@ namespace Graphics3D.Drawing3D
             set { type = value; }
         }
 
-        Color color = Color.Black;
-        public String BorderColor
+        Color color =  Color.Wheat;
+        
+        public Color BorderColor
         {
-            get { return color.Name; }
-            set { color = Color.FromName(value); }
+            get {
+                
+                
+
+                return color; }
+            set { color = value; }
         }
 
         public Vertex P1 { get { return p1; } set { p1 = value; } }

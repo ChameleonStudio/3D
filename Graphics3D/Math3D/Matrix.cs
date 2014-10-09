@@ -160,18 +160,18 @@ namespace Graphics3D.Math3D
             a = ToRadian(a);
             Matrix m = new double[,]{
             {Math.Cos(a), -Math.Sin(a), 0, 0},
-            {Math.Sin(a), Math.Cos(a), 0, 0},
-            {0, 0, 1, 0},
-            {0, 0, 0, 1}
-            };
-            return m;
-        }
-
+            {Math.Sin(a), Math.Cos(a), 0, 0},                         
+            {0, 0, 1, 0},                                            
+            {0, 0, 0, 1}                                              
+            };                                                         
+            return m;                                                
+        }                                                              
+                                                                       
         public static Matrix GetRotationOYMatrix(double a)
         {
             a = ToRadian(a);
             Matrix m = new double[,]{
-            {Math.Cos(a), 0, -Math.Sin(a), 0},
+            {Math.Cos(a), 0,-Math.Sin(a), 0},
             {0, 1, 0, 0},
             {Math.Sin(a),0, Math.Cos(a), 0},
             {0, 0, 0, 1}
@@ -184,8 +184,8 @@ namespace Graphics3D.Math3D
             a = ToRadian(a);
             Matrix m = new double[,]{
             {1,0, 0, 0},
-            {0,Math.Cos(a), 0,Math.Sin(a)},
-            {0,-Math.Sin(a),0, Math.Cos(a)},
+            {0,Math.Cos(a),Math.Sin(a),0},
+            {0,-Math.Sin(a), Math.Cos(a),0},
             {0, 0, 0, 1}
             };
             return m;

@@ -12,14 +12,7 @@ namespace Graphics3D.Drawing3D
     [Serializable]
     public class Environment
     {
-        Camera camera = new Camera();
         Dictionary<String,Figure> figures = new Dictionary<String, Figure>();
-
-        public Camera Camera
-        {
-            get { return camera; }
-            set { camera = value; }
-        }
 
         public Dictionary<String, Figure> Figures
         {
@@ -75,20 +68,30 @@ namespace Graphics3D.Drawing3D
         {
             get { return angle; }
             set { angle = value;
-            transform(Matrix.GetRotationMatrix(Angle), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
+            //transform(Matrix.GetRotationMatrix(Angle), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
+            transform(Matrix.GetRotationOZMatrix(Angle.OZ) * Matrix.GetRotationOYMatrix(Angle.OY) * Matrix.GetRotationOXMatrix(Angle.OX), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
             }
+        }
+
+        public void TransformationRefresh()
+        {
+            transform(Matrix.GetRotationOZMatrix(Angle.OZ) * Matrix.GetRotationOYMatrix(Angle.OY) * Matrix.GetRotationOXMatrix(Angle.OX), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
         }
 
         public Bitmap GetImage(int width, int height)
         {
+            TransformationRefresh();
             Bitmap b = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(b);
+            g.Clear(Color.Black);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             double z = -500;
+            Random a = new Random();
             foreach (Figure f in Figures.Values)
             {
                 foreach (Line l in f.Lines)
                 {
-                    g.DrawLine(new Pen(Color.FromName(l.BorderColor), 1),
+                    g.DrawLine(new Pen(l.BorderColor, 1),
                         new Point3D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + height / 2, 1),
                         new Point3D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + height / 2, 1));
                 }

@@ -62,12 +62,8 @@ namespace Example
             f2.AddLine(2, 5);
             f2.AddLine(2, 3);
             E.Figures.Add(f2.Name, f2);
-            //E.Transform(new Matrix(4), new Matrix(4), Matrix.GetTranslateMatrix(5, 0, 0));
-            // E.Figures.Add(f2.Name+"1", f2);
-            //E.Transform(new Matrix(4), new Matrix(4), Matrix.GetTranslateMatrix(0, 0, 0), new Matrix(4));
-
-
-            Figure f =  new Figure("Gasya");
+         
+           /* Figure f =  new Figure("Gasya");
             f.Vertexes.Add(new Vertex(0, 0, 0));//0
             f.Vertexes.Add(new Vertex(0, 10, 0));//1
             f.Vertexes.Add(new Vertex(5, 10, 0));//2
@@ -104,7 +100,7 @@ namespace Example
             f.AddLine(5, 11);
 
             E.AddFigure(f);
-
+            */
 
          
 
@@ -117,9 +113,9 @@ namespace Example
             f3.AddLine(0, 1);
             f3.AddLine(0, 2);
             f3.AddLine(0, 3);
-            f3.Lines[0].BorderColor = "Red";      //x
-            f3.Lines[1].BorderColor = "Blue";     //y
-            f3.Lines[2].BorderColor = "Green";    //z
+            f3.Lines[0].BorderColor = Color.FromName("Red");      //x
+            f3.Lines[1].BorderColor = Color.FromName("Blue");     //y
+            f3.Lines[2].BorderColor = Color.FromName("Green");    //z
             E.Figures.Add(f3.Name, f3);
 
 
@@ -133,32 +129,31 @@ namespace Example
 
         private void button4_Click(object sender, EventArgs e)
         {
-            E.Angle.OZ += 1;
+            E.Figures["Cube"].OZRotate(1);
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            E.Angle.OY += 1;
+            E.Figures["Cube"].OYRotate(1);
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            E.Angle.OX += 1;
+            E.Figures["Cube"].OXRotate(1);
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            E.Angle += new Transformation(trackBar3.Value, trackBar2.Value, trackBar1.Value);
+            E.Figures["Cube"].Rotate(new Transformation(trackBar3.Value, trackBar2.Value, trackBar1.Value));
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-          
-            
+
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -169,6 +164,33 @@ namespace Example
         private void button8_Click(object sender, EventArgs e)
         {
             timer1.Stop();
+        }
+
+        bool canRotate = false;
+        Point start;
+        double OYStart,OXStart;
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            canRotate = true;
+            start = new Point(e.X,e.Y);
+            OYStart = E.Angle.OY;
+            OXStart = E.Angle.OX;
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (canRotate)
+            {
+                E.Angle.OY = OYStart + (start.X - e.X)/2;
+                E.Angle.OX = OXStart + (start.Y - e.Y)/2;
+            }
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            canRotate = false;
+
         }
      }
 }

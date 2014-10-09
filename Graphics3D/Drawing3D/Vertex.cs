@@ -55,5 +55,17 @@ namespace Graphics3D.Drawing3D
             TPoint.Y = m[0, 1];
             TPoint.Z = m[0, 2];
         }
+
+        public void AbsTransform(Matrix transformation)
+        {
+
+            Matrix m = (new double[,] { { Point.X, Point.Y, Point.Z, 1 } }) * transformation;
+            Point.X = m[0, 0];
+            Point.Y = m[0, 1];
+            Point.Z = m[0, 2];
+            TPoint.X = Point.X;
+            TPoint.Y = Point.Y;
+            TPoint.Z = Point.Z;
+        }
     }
 }

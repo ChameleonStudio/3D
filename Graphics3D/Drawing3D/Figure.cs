@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-
+using Graphics3D;
+using Graphics3D.Drawing3D;
+using Graphics3D.Math3D;
 
 namespace Graphics3D.Drawing3D
 {
@@ -82,7 +84,47 @@ namespace Graphics3D.Drawing3D
             AddPoligon(poligon);
         }
 
+        public void OXRotate(double angle)
+        {
+            transform(Matrix.GetRotationOXMatrix(angle));
+        }
 
+        public void OYRotate(double angle)
+        {
+            transform(Matrix.GetRotationOYMatrix(angle));
+        }
 
+        public void OZRotate(double angle)
+        {
+            transform(Matrix.GetRotationOZMatrix(angle));
+        }
+
+        public void Rotate(Transformation rotate)
+        {
+            transform(Matrix.GetRotationMatrix(rotate));
+        }
+
+        public void Translate(Transformation translate)
+        {
+            transform(Matrix.GetTranslateMatrix(translate));
+        }
+
+        public void Scale(Transformation scale)
+        {
+            transform(Matrix.GetScaleMatrix(scale));
+        }
+
+        public void Scale(double scale)
+        {
+            transform(Matrix.GetScaleMatrix(scale));
+        }
+
+        private void transform(Matrix transformation)
+        {
+            for (int i = 0; i < Vertexes.Count; i++)
+            {
+                Vertexes[i].AbsTransform(transformation);
+            }
+        }
     }
 }
