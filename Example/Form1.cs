@@ -33,10 +33,19 @@ namespace Example
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (SelectFigure != "")
+            {
+                E.Figures[SelectFigure].Rotate(new Transformation(trackBar3.Value, trackBar2.Value, trackBar1.Value));
+            }
+            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
         {
             Figure f2 = new Figure("Cube");
-           
+
             f2.Vertexes.Add(new Vertex(1, 1, 1)); //0
             f2.Vertexes.Add(new Vertex(1, 5, 1)); //1
             f2.Vertexes.Add(new Vertex(5, 5, 5)); //2
@@ -61,48 +70,61 @@ namespace Example
             f2.AddLine(2, 4);
             f2.AddLine(2, 5);
             f2.AddLine(2, 3);
-            E.Figures.Add(f2.Name, f2);
-         
-           /* Figure f =  new Figure("Gasya");
-            f.Vertexes.Add(new Vertex(0, 0, 0));//0
-            f.Vertexes.Add(new Vertex(0, 10, 0));//1
-            f.Vertexes.Add(new Vertex(5, 10, 0));//2
-            f.Vertexes.Add(new Vertex(5, 9, 0));//3
-            f.Vertexes.Add(new Vertex(1, 9, 0));//4
-            f.Vertexes.Add(new Vertex(1, 0, 0));//5
+            //E.Figures.Add(f2.Name, f2);
 
-            f.Vertexes.Add(new Vertex(0, 0, 1));//6
-            f.Vertexes.Add(new Vertex(0, 10, 1));//7
-            f.Vertexes.Add(new Vertex(5, 10, 1));//8
-            f.Vertexes.Add(new Vertex(5, 9, 1));//9
-            f.Vertexes.Add(new Vertex(1, 9, 1));//10
-            f.Vertexes.Add(new Vertex(1, 0, 1));//11
 
-            f.AddLine(0, 1);
-            f.AddLine(1, 2);
-            f.AddLine(2, 3);
-            f.AddLine(3, 4);
-            f.AddLine(4, 5);
-            f.AddLine(0, 5);
+            Figure Letter = new Figure("O");
+            Letter.Vertexes.Add(new Vertex(2, 3, 0.5)); //0
+            Letter.Vertexes.Add(new Vertex(2, -3, 0.5)); //1
+            Letter.Vertexes.Add(new Vertex(-2, -3, 0.5)); //2
+            Letter.Vertexes.Add(new Vertex(-2, 3, 0.5)); //3
 
-            f.AddLine(6, 7);
-            f.AddLine(7, 8);
-            f.AddLine(8, 9);
-            f.AddLine(9, 10);
-            f.AddLine(10, 11);
-            f.AddLine(6, 11);
+            Letter.Vertexes.Add(new Vertex(1, 2, 0.5)); //4
+            Letter.Vertexes.Add(new Vertex(1, -2, 0.5)); //5
+            Letter.Vertexes.Add(new Vertex(-1, -2, 0.5)); //6
+            Letter.Vertexes.Add(new Vertex(-1, 2, 0.5)); //7
 
-            f.AddLine(0, 6);
-            f.AddLine(1, 7);
-            f.AddLine(2, 8);
-            f.AddLine(3, 9);
-            f.AddLine(4, 10);
-            f.AddLine(5, 11);
+            Letter.Vertexes.Add(new Vertex(2, 3, -0.5)); //8
+            Letter.Vertexes.Add(new Vertex(2, -3, -0.5)); //9
+            Letter.Vertexes.Add(new Vertex(-2, -3, -0.5)); //10
+            Letter.Vertexes.Add(new Vertex(-2, 3, -0.5)); //11
 
-            E.AddFigure(f);
-            */
+            Letter.Vertexes.Add(new Vertex(1, 2, -0.5)); //12
+            Letter.Vertexes.Add(new Vertex(1, -2, -0.5)); //13
+            Letter.Vertexes.Add(new Vertex(-1, -2, -0.5)); //14
+            Letter.Vertexes.Add(new Vertex(-1, 2, -0.5)); //15
 
-         
+            Letter.AddLine(0, 1);
+            Letter.AddLine(1, 2);
+            Letter.AddLine(2, 3);
+            Letter.AddLine(3, 0);
+
+            Letter.AddLine(4, 5);
+            Letter.AddLine(5, 6);
+            Letter.AddLine(6, 7);
+            Letter.AddLine(7, 4);
+
+            Letter.AddLine(8, 9);
+            Letter.AddLine(9, 10);
+            Letter.AddLine(10, 11);
+            Letter.AddLine(11, 8);
+
+            Letter.AddLine(12, 13);
+            Letter.AddLine(13, 14);
+            Letter.AddLine(14, 15);
+            Letter.AddLine(15, 12);
+
+
+            Letter.AddLine(0, 8);
+            Letter.AddLine(1, 9);
+            Letter.AddLine(2, 10);
+            Letter.AddLine(3, 11);
+
+            Letter.AddLine(4, 12);
+            Letter.AddLine(5, 13);
+            Letter.AddLine(6, 14);
+            Letter.AddLine(7, 15);
+            E.Figures.Add(Letter.Name, Letter);
 
 
             Figure f3 = new Figure("Cords");
@@ -110,50 +132,38 @@ namespace Example
             f3.Vertexes.Add(new Vertex(10, 0, 0));
             f3.Vertexes.Add(new Vertex(0, 10, 0));
             f3.Vertexes.Add(new Vertex(0, 0, 10));
+
+            f3.Vertexes.Add(new Vertex(-10, 0, 0));
+            f3.Vertexes.Add(new Vertex(0, -10, 0));
+            f3.Vertexes.Add(new Vertex(0, 0, -10));
+
             f3.AddLine(0, 1);
             f3.AddLine(0, 2);
             f3.AddLine(0, 3);
-            f3.Lines[0].BorderColor = Color.FromName("Red");      //x
-            f3.Lines[1].BorderColor = Color.FromName("Blue");     //y
-            f3.Lines[2].BorderColor = Color.FromName("Green");    //z
+
+            f3.AddLine(0, 4);
+            f3.AddLine(0, 5);
+            f3.AddLine(0, 6);
+
+            f3.Lines[0].BorderColor = Color.Red;      //x
+            f3.Lines[1].BorderColor = Color.Blue;     //y
+            f3.Lines[2].BorderColor = Color.Green;    //z
+
+            f3.Lines[3].BorderColor = Color.Red;      //x
+            f3.Lines[4].BorderColor = Color.Blue;     //y
+            f3.Lines[5].BorderColor = Color.Green;    //z
+
+            f3.Lines[3].Type = System.Drawing.Drawing2D.DashStyle.Dash;      //x
+            f3.Lines[4].Type = System.Drawing.Drawing2D.DashStyle.Dash;     //y
+            f3.Lines[5].Type = System.Drawing.Drawing2D.DashStyle.Dash;    //z
             E.Figures.Add(f3.Name, f3);
 
 
 
             E.Scale = 30;
-     
+
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
-        }
-
-       
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            E.Figures["Cube"].OZRotate(1);
-            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            E.Figures["Cube"].OYRotate(1);
-            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            E.Figures["Cube"].OXRotate(1);
-            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            E.Figures["Cube"].Rotate(new Transformation(trackBar3.Value, trackBar2.Value, trackBar1.Value));
-            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
+            //propertyGrid1.SelectedObject = f2;
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -172,11 +182,33 @@ namespace Example
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            canRotate = true;
-            start = new Point(e.X,e.Y);
-            OYStart = E.Angle.OY;
-            OXStart = E.Angle.OX;
+            if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                canRotate = true;
+                start = new Point(e.X, e.Y);
+                OYStart = E.Angle.OY;
+                OXStart = E.Angle.OX;
+            }
+            if(e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                SelectFigure = "";
+                Figure f = E.CheckFigure(new Point2D(e.X, e.Y));
+                foreach (Figure F in E.Figures.Values)
+                {
+                    if (ReferenceEquals(f, F))
+                    {
+                        F.Selected = true;
+                        SelectFigure = F.Name;
+                    }
+                    else
+                    {
+                        F.Selected = false;
+                    }
+                }
+            }
         }
+
+        String SelectFigure = "";
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -192,5 +224,12 @@ namespace Example
             canRotate = false;
 
         }
+
+        private void trackBar4_Scroll(object sender, EventArgs e)
+        {
+            E.Scale = trackBar4.Value;
+        }
+
+
      }
 }

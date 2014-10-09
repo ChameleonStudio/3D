@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drawing3D\Camera.cs" />
     <Compile Include="Drawing3D\Environment.cs" />
     <Compile Include="Drawing3D\Figure.cs" />
     <Compile Include="Drawing3D\Line.cs" />

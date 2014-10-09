@@ -77,26 +77,64 @@ namespace Graphics3D.Drawing3D
         {
             transform(Matrix.GetRotationOZMatrix(Angle.OZ) * Matrix.GetRotationOYMatrix(Angle.OY) * Matrix.GetRotationOXMatrix(Angle.OX), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
         }
-
+        Size lastImage;
+        double z = -500;
         public Bitmap GetImage(int width, int height)
         {
             TransformationRefresh();
+            lastImage = new Size(width, height);
             Bitmap b = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(b);
             g.Clear(Color.Black);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            double z = -500;
+            
             Random a = new Random();
-            foreach (Figure f in Figures.Values)
+            try
             {
-                foreach (Line l in f.Lines)
+                foreach (Figure f in Figures.Values)
                 {
-                    g.DrawLine(new Pen(l.BorderColor, 1),
-                        new Point3D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + height / 2, 1),
-                        new Point3D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + height / 2, 1));
+                    float w = 1;
+                    if (f.Selected)
+                    {
+                        w = 3;
+                    }
+                    foreach (Line l in f.Lines)
+                    {
+                        
+                        Pen p = new Pen(l.BorderColor, w);
+                        p.DashStyle = l.Type;
+                        g.DrawLine(p,
+                            new Point3D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + height / 2, 1),
+                            new Point3D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + height / 2, 1));
+                        p.Dispose();
+                    }
+                }
+            }catch (Exception){}
+            return b;
+        }
+
+        public Figure CheckFigure(Point2D mouse)
+        {
+            try
+            {
+                foreach (Figure f in Figures.Values)
+                {
+                    foreach (Line l in f.Lines)
+                    {
+                        Point2D p1 = new Point2D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + lastImage.Width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + lastImage.Height / 2);
+                        Point2D p2 = new Point2D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + lastImage.Width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + lastImage.Height / 2);
+                        if (dist(mouse, p1) + dist(mouse, p2)- 0.3 <= dist(p1, p2))
+                            return f;
+                    }
                 }
             }
-            return b;
+            catch (Exception) {}
+            return null;
+        }
+
+        private double dist(Point2D p1, Point2D p2)
+        {
+            return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
         }
 
         public void AddFigure(Figure figure)

@@ -5,24 +5,19 @@ using System.Text;
 using System.Drawing;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Drawing.Drawing2D;
 
 namespace Graphics3D.Drawing3D
 {
-    public enum LineType
-    {
-        Solid,
-        DashAndDot
-    }
-
 
     [Serializable]
     public class Line 
     {
         Vertex p1 = new Vertex(),p2 = new Vertex();
 
-        LineType type = LineType.Solid;
+        DashStyle type = DashStyle.Solid;
 
-        public LineType Type
+        public DashStyle Type
         {
             get { return type; }
             set { type = value; }
@@ -45,7 +40,7 @@ namespace Graphics3D.Drawing3D
 
         public Line() : this(new Vertex(), new Vertex()) { }
 
-        public Line(Vertex p1, Vertex p2, LineType type = LineType.Solid, String color =  "Black")
+        public Line(Vertex p1, Vertex p2)
         {
             P1 = p1;
             P2 = p2;

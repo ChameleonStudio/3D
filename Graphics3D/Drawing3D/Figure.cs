@@ -126,5 +126,28 @@ namespace Graphics3D.Drawing3D
                 Vertexes[i].AbsTransform(transformation);
             }
         }
+
+        public Point3D GetCenter()
+        {
+            Point3D center = new Point3D();
+            for (int i = 0; i < Vertexes.Count; i++)
+            {
+                center.X += Vertexes[i].Point.X;
+                center.Y += Vertexes[i].Point.Y;
+                center.Z += Vertexes[i].Point.Z;
+            }
+            center.X /= Vertexes.Count;
+            center.Y /= Vertexes.Count;
+            center.Z /= Vertexes.Count;
+            return center;
+        }
+
+        bool selected = false;
+
+        public bool Selected
+        {
+            get { return selected; }
+            set { selected = value; }
+        }
     }
 }
