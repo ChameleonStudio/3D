@@ -8,7 +8,6 @@ namespace Graphics3D.Drawing3D
 {
     public class Figures
     {
-
         public static Figure Axis()
         {
             Figure f3 = new Figure("Axis");
@@ -44,7 +43,7 @@ namespace Graphics3D.Drawing3D
             return f3;
         }
 
-        public static Figure O(string name = "O")
+        public static Figure O(String name = "O")
         {
             Figure Letter = new Figure(name);
             Letter.Vertexes.Add(new Vertex(2, 3, 0.5)); //0
@@ -100,7 +99,6 @@ namespace Graphics3D.Drawing3D
             return Letter;
         }
 
-
         public static Figure Cube(String name, Color color)
         {
             Figure f = new Figure(name);
@@ -144,6 +142,7 @@ namespace Graphics3D.Drawing3D
             }
             return f;
         }
+
         public static Figure Cone(String name, Color color, int count = 30)
         {
             Figure f = new Figure(name);
@@ -278,7 +277,6 @@ namespace Graphics3D.Drawing3D
             return f;
         }
 
-
         public static Figure Tube(String name, Color color, int count = 30,double radius = 0.75)
         {
             Figure f = new Figure(name);
@@ -343,7 +341,5 @@ namespace Graphics3D.Drawing3D
 
             return f;
         }
-
-
     }
 }

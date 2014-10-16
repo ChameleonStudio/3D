@@ -67,7 +67,6 @@ namespace Example
                         else
                             E.Figures[SelectFigure].RelativeScale(new Transformation(((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1)));
                 }
-                
             }
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
         }
@@ -79,7 +78,6 @@ namespace Example
 
             Figure o = Figures.O();
             E.AddFigure(o);
-
 
             E.Scale = trackBar4.Value;
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
