@@ -18,6 +18,14 @@ namespace Graphics3D.Drawing3D
     {
         String name;
 
+        bool selectable = true;
+
+        public bool Selectable
+        {
+            get { return selectable; }
+            set { selectable = value; }
+        }
+
         public Figure(String name)
         {
             Name = name;
@@ -32,6 +40,27 @@ namespace Graphics3D.Drawing3D
         List<Vertex> vertexses = new List<Vertex>();
         List<Triangle> triangles = new List<Triangle>();
         List<Line> lines = new List<Line>();
+
+
+        public void SetBorderColor(Color color)
+        {
+            foreach(Line l in Lines)
+            {
+                l.BorderColor = color;
+            }
+
+        }
+        public Color GetBorderColor()
+        {
+            try
+            {
+                return Lines[0].BorderColor;
+            }
+            catch (Exception)
+            {
+                return Color.Black;
+            }             
+        }
 
 
         public List<Line> Lines
@@ -105,9 +134,31 @@ namespace Graphics3D.Drawing3D
             transform(Matrix.GetRotationMatrix(rotate));
         }
 
+        public void RelativeRotate(Transformation rotate)
+        {
+            Point3D center = GetCenter();
+            transform(Matrix.GetTranslateMatrix(new Transformation(Point3D.Reverse(center))));
+            transform(Matrix.GetRotationMatrix(rotate));
+            transform(Matrix.GetTranslateMatrix(new Transformation(center)));
+        }
+
         public void Translate(Transformation translate)
         {
             transform(Matrix.GetTranslateMatrix(translate));
+        }
+
+        public void RelativeScale(Transformation scale)
+        {
+            Point3D center = GetCenter();
+            transform(Matrix.GetTranslateMatrix(new Transformation(Point3D.Reverse(center))));
+            transform(Matrix.GetScaleMatrix(scale));
+            transform(Matrix.GetTranslateMatrix(new Transformation(center)));
+        }
+
+        public void TranslateToCenter()
+        {
+            Point3D center = GetCenter();
+            transform(Matrix.GetTranslateMatrix(new Transformation(Point3D.Reverse(center))));
         }
 
         public void Scale(Transformation scale)
@@ -151,35 +202,12 @@ namespace Graphics3D.Drawing3D
             set { selected = value; }
         }
 
-        public static Figure GetCube(String name, Color color)
+        bool hidden = false;
+
+        public bool Hidden
         {
-            Figure f = new Figure(name);
-            f.Vertexes.Add(new Vertex(1, 1, 1)); //0
-            f.Vertexes.Add(new Vertex(1, -1, 1)); //1
-            f.Vertexes.Add(new Vertex(-1, -1, 1)); //2
-            f.Vertexes.Add(new Vertex(-1, 1, 1)); //3
-            f.Vertexes.Add(new Vertex(1, 1, -1)); //4
-            f.Vertexes.Add(new Vertex(1, -1, -1)); //5
-            f.Vertexes.Add(new Vertex(-1, -1, -1)); //6
-            f.Vertexes.Add(new Vertex(-1, 1, -1)); //7
-            f.AddLine(0, 1);
-            f.AddLine(1, 2);
-            f.AddLine(2, 3);
-            f.AddLine(3, 0);
-
-            f.AddLine(4, 5);
-            f.AddLine(5, 6);
-            f.AddLine(6, 7);
-            f.AddLine(7, 4);
-
-            f.AddLine(0, 4);
-            f.AddLine(1, 5);
-            f.AddLine(2, 6);
-            f.AddLine(3, 7);
-
-            foreach (Line l in f.Lines)
-                l.BorderColor = color;
-            return f;
+            get { return hidden; }
+            set { hidden = value; }
         }
 
     }

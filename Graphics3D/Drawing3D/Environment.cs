@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
+using System.IO;
 using System.Collections.Generic;
+using System.Runtime;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using System.Text;
 using Graphics3D.Math3D;
@@ -85,18 +90,18 @@ namespace Graphics3D.Drawing3D
             lastImage = new Size(width, height);
             Bitmap b = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(b);
-            g.Clear(Color.Black);
+            g.Clear(backgroundColor);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             
             Random a = new Random();
             try
             {
-                foreach (Figure f in Figures.Values)
+                foreach (Figure f in Enumerable.Where(Figures.Values, f => !f.Hidden))
                 {
                     float w = 1;
                     if (f.Selected)
                     {
-                        w = 3;
+                        w = 2;
                     }
                     foreach (Line l in f.Lines)
                     {
@@ -123,7 +128,7 @@ namespace Graphics3D.Drawing3D
                     {
                         Point2D p1 = new Point2D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + lastImage.Width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + lastImage.Height / 2);
                         Point2D p2 = new Point2D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + lastImage.Width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + lastImage.Height / 2);
-                        if (dist(mouse, p1) + dist(mouse, p2)- 0.3 <= dist(p1, p2))
+                        if (dist(mouse, p1) + dist(mouse, p2)- 0.3 <= dist(p1, p2) && f.Selectable)
                             return f;
                     }
                 }
@@ -144,22 +149,28 @@ namespace Graphics3D.Drawing3D
 
         public static void Save(String filename, Environment environment)
         {
-            XmlWriter x;
-            XmlWriterSettings s = new XmlWriterSettings();
-            s.CloseOutput = true;
-            s.Indent = true;
-            x = XmlWriter.Create(filename,s);
-            new XmlSerializer(typeof(Graphics3D.Drawing3D.Environment)).Serialize(x, environment);
-            x.Close();
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = File.Open(filename, FileMode.Create);
+            formatter.Serialize(stream, environment);
+            stream.Close(); 
         }
 
         public static Environment Load(String filename)
         {
-            XmlReader x;
-            x = XmlReader.Create(filename);
-            Environment environment = (Environment)new XmlSerializer(typeof(Graphics3D.Drawing3D.Environment)).Deserialize(x);
-            x.Close();
-            return environment;
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = File.Open(filename, FileMode.Open);
+            Environment env = (Environment)formatter.Deserialize(stream);
+            stream.Close();
+            return env;
         }
+
+        Color backgroundColor = Color.Black;
+
+        public Color BackgroundColor
+        {
+            get { return backgroundColor; }
+            set { backgroundColor = value; }
+        }
+
     }
 }

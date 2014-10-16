@@ -24,148 +24,66 @@ namespace Example
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Graphics3D.Drawing3D.Environment.Save(System.Environment.CurrentDirectory + "\\f.xml", E);
+            saveFileDialog1.ShowDialog();
+            Graphics3D.Drawing3D.Environment.Save(saveFileDialog1.FileName, E);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            E = Graphics3D.Drawing3D.Environment.Load(System.Environment.CurrentDirectory + "\\f.xml");
+            openFileDialog1.ShowDialog();
+            E = Graphics3D.Drawing3D.Environment.Load(openFileDialog1.FileName);
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
+            trackBar4.Value = (int)E.Scale.OX;
+            ListUpdate();
+            trackBar4.BackColor = E.BackgroundColor;
+            checkBox3.Checked = !E.Figures["Axis"].Hidden;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (SelectFigure != "")
             {
-                E.Figures[SelectFigure].Rotate(new Transformation(trackBar3.Value, trackBar2.Value, trackBar1.Value));
+                if (radioButton1.Checked)
+                {
+                    if (checkBox2.Checked)
+                        E.Figures[SelectFigure].RelativeRotate(new Transformation((double)trackBar3.Value / 18, (double)trackBar2.Value / 18, (double)trackBar1.Value / 18));
+                    else
+                        E.Figures[SelectFigure].Rotate(new Transformation((double)trackBar3.Value / 18, (double)trackBar2.Value / 18, (double)trackBar1.Value / 18));
+                }
+                else if (radioButton2.Checked)
+                {
+                        E.Figures[SelectFigure].Translate(new Transformation((double)trackBar3.Value / 72, (double)trackBar2.Value / 72, (double)trackBar1.Value / 72));
+                }
+                else if (radioButton3.Checked)
+                {
+                    if (!checkBox2.Checked)
+                        if (!checkBox1.Checked)
+                            E.Figures[SelectFigure].Scale(new Transformation(((double)trackBar3.Value / 1000 + 1), ((double)trackBar2.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1)));
+                        else
+                            E.Figures[SelectFigure].Scale(new Transformation(((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1)));
+                    else
+                        if (!checkBox1.Checked)
+                            E.Figures[SelectFigure].RelativeScale(new Transformation(((double)trackBar3.Value / 1000 + 1), ((double)trackBar2.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1)));
+                        else
+                            E.Figures[SelectFigure].RelativeScale(new Transformation(((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1)));
+                }
+                
             }
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Figure f2 = new Figure("Cube");
+            Figure axis = Figures.Axis();
+            E.AddFigure(axis);
 
-            f2.Vertexes.Add(new Vertex(1, 1, 1)); //0
-            f2.Vertexes.Add(new Vertex(1, 5, 1)); //1
-            f2.Vertexes.Add(new Vertex(5, 5, 5)); //2
-            f2.Vertexes.Add(new Vertex(1, 5, 5)); //3
-            f2.Vertexes.Add(new Vertex(5, 5, 1)); //4
-            f2.Vertexes.Add(new Vertex(5, 1, 5)); //5
-            f2.Vertexes.Add(new Vertex(5, 1, 1)); //6
-            f2.Vertexes.Add(new Vertex(1, 1, 5)); //7
-            f2.AddLine(0, 1);
-            f2.AddLine(0, 6);
-            f2.AddLine(0, 7);
-
-            f2.AddLine(6, 5);
-            f2.AddLine(6, 4);
-
-            f2.AddLine(7, 5);
-            f2.AddLine(7, 3);
-
-            f2.AddLine(1, 3);
-            f2.AddLine(1, 4);
-
-            f2.AddLine(2, 4);
-            f2.AddLine(2, 5);
-            f2.AddLine(2, 3);
-            //E.Figures.Add(f2.Name, f2);
+            Figure o = Figures.O();
+            E.AddFigure(o);
 
 
-            Figure Letter = new Figure("O");
-            Letter.Vertexes.Add(new Vertex(2, 3, 0.5)); //0
-            Letter.Vertexes.Add(new Vertex(2, -3, 0.5)); //1
-            Letter.Vertexes.Add(new Vertex(-2, -3, 0.5)); //2
-            Letter.Vertexes.Add(new Vertex(-2, 3, 0.5)); //3
-
-            Letter.Vertexes.Add(new Vertex(1, 2, 0.5)); //4
-            Letter.Vertexes.Add(new Vertex(1, -2, 0.5)); //5
-            Letter.Vertexes.Add(new Vertex(-1, -2, 0.5)); //6
-            Letter.Vertexes.Add(new Vertex(-1, 2, 0.5)); //7
-
-            Letter.Vertexes.Add(new Vertex(2, 3, -0.5)); //8
-            Letter.Vertexes.Add(new Vertex(2, -3, -0.5)); //9
-            Letter.Vertexes.Add(new Vertex(-2, -3, -0.5)); //10
-            Letter.Vertexes.Add(new Vertex(-2, 3, -0.5)); //11
-
-            Letter.Vertexes.Add(new Vertex(1, 2, -0.5)); //12
-            Letter.Vertexes.Add(new Vertex(1, -2, -0.5)); //13
-            Letter.Vertexes.Add(new Vertex(-1, -2, -0.5)); //14
-            Letter.Vertexes.Add(new Vertex(-1, 2, -0.5)); //15
-
-            Letter.AddLine(0, 1);
-            Letter.AddLine(1, 2);
-            Letter.AddLine(2, 3);
-            Letter.AddLine(3, 0);
-
-            Letter.AddLine(4, 5);
-            Letter.AddLine(5, 6);
-            Letter.AddLine(6, 7);
-            Letter.AddLine(7, 4);
-
-            Letter.AddLine(8, 9);
-            Letter.AddLine(9, 10);
-            Letter.AddLine(10, 11);
-            Letter.AddLine(11, 8);
-
-            Letter.AddLine(12, 13);
-            Letter.AddLine(13, 14);
-            Letter.AddLine(14, 15);
-            Letter.AddLine(15, 12);
-
-
-            Letter.AddLine(0, 8);
-            Letter.AddLine(1, 9);
-            Letter.AddLine(2, 10);
-            Letter.AddLine(3, 11);
-
-            Letter.AddLine(4, 12);
-            Letter.AddLine(5, 13);
-            Letter.AddLine(6, 14);
-            Letter.AddLine(7, 15);
-            E.Figures.Add(Letter.Name, Letter);
-
-            Figure cube = Figure.GetCube("CUBE1", Color.RoyalBlue);
-            E.Figures.Add(cube.Name, cube);
-
-            Figure f3 = new Figure("Cords");
-            f3.Vertexes.Add(new Vertex(0, 0, 0));
-            f3.Vertexes.Add(new Vertex(10, 0, 0));
-            f3.Vertexes.Add(new Vertex(0, 10, 0));
-            f3.Vertexes.Add(new Vertex(0, 0, 10));
-
-            f3.Vertexes.Add(new Vertex(-10, 0, 0));
-            f3.Vertexes.Add(new Vertex(0, -10, 0));
-            f3.Vertexes.Add(new Vertex(0, 0, -10));
-
-            f3.AddLine(0, 1);
-            f3.AddLine(0, 2);
-            f3.AddLine(0, 3);
-
-            f3.AddLine(0, 4);
-            f3.AddLine(0, 5);
-            f3.AddLine(0, 6);
-
-            f3.Lines[0].BorderColor = Color.Red;      //x
-            f3.Lines[1].BorderColor = Color.Blue;     //y
-            f3.Lines[2].BorderColor = Color.Green;    //z
-
-            f3.Lines[3].BorderColor = Color.Red;      //x
-            f3.Lines[4].BorderColor = Color.Blue;     //y
-            f3.Lines[5].BorderColor = Color.Green;    //z
-
-            f3.Lines[3].Type = System.Drawing.Drawing2D.DashStyle.Dash;      //x
-            f3.Lines[4].Type = System.Drawing.Drawing2D.DashStyle.Dash;     //y
-            f3.Lines[5].Type = System.Drawing.Drawing2D.DashStyle.Dash;    //z
-            E.Figures.Add(f3.Name, f3);
-
-
-
-            E.Scale = 30;
-
+            E.Scale = trackBar4.Value;
             pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
-            //propertyGrid1.SelectedObject = f2;
+            ListUpdate();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -201,12 +119,15 @@ namespace Example
                     {
                         F.Selected = true;
                         SelectFigure = F.Name;
+                        pictureBox2.BackColor = F.GetBorderColor();
+                        break;
                     }
                     else
                     {
                         F.Selected = false;
                     }
                 }
+                if(SelectFigure == "") pictureBox2.BackColor = E.BackgroundColor;
             }
         }
 
@@ -232,6 +153,105 @@ namespace Example
             E.Scale = trackBar4.Value;
         }
 
+        private void trackBar1_MouseUp(object sender, MouseEventArgs e)
+        {
+            (sender as TrackBar).Value = 0;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Figure f = null;
+            Random r = new Random();
+            Color c = Color.FromArgb(255,r.Next(255),r.Next(255),r.Next(255));
+            switch(comboBox1.Text)
+            {
+                case "O": f = Figures.O(textBox1.Text); break;
+                case "Sphere": f = Figures.Sphere(textBox1.Text, c,(int)numericUpDown1.Value); break;
+                case "Cone": f = Figures.Cone(textBox1.Text, c, (int)numericUpDown1.Value); break;
+                case "Cube": f = Figures.Cube(textBox1.Text, c); break;
+                case "Tube": f = Figures.Tube(textBox1.Text, c, (int)numericUpDown1.Value); break;
+                case "Cylinder": f = Figures.Cylinder(textBox1.Text, c, (int)numericUpDown1.Value); break;
+                case "Torus": f = Figures.Torus(textBox1.Text, c, (int)numericUpDown1.Value); break;
+                case "Circle": f = Figures.Circle(textBox1.Text, c, (int)numericUpDown1.Value); break;
+            }
+            if (f != null)
+            {
+                E.AddFigure(f);
+                SelectFigure = f.Name;
+                foreach (Figure figure in Enumerable.Where(E.Figures.Values, figure => figure.Selectable == true))
+                    figure.Selected = false;
+                if (SelectFigure != "")
+                    E.Figures[SelectFigure].Selected = true;
+            }
+
+            namecount++;
+            textBox1.Text = "DefaultName " + namecount.ToString();
+            ListUpdate();
+        }
+        int namecount = 0;
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Delete)
+            {
+                E.Figures.Remove(SelectFigure);
+                SelectFigure = "";
+                ListUpdate();
+            }
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = pictureBox2.BackColor;
+            colorDialog1.ShowDialog();
+            if (SelectFigure != "")
+                E.Figures[SelectFigure].SetBorderColor(colorDialog1.Color);
+            else
+                E.BackgroundColor = colorDialog1.Color;
+
+            trackBar4.BackColor = E.BackgroundColor;
+            pictureBox2.BackColor = colorDialog1.Color;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (SelectFigure != "")
+                E.Figures[SelectFigure].TranslateToCenter();
+        }
+
+        void ListUpdate()
+        {
+            listBox1.Items.Clear();
+            foreach (Figure f in Enumerable.Where(E.Figures.Values, f => f.Selectable == true))
+            {
+                listBox1.Items.Add(f.Name);
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((sender as ListBox).SelectedItem != null)
+                SelectFigure = (sender as ListBox).SelectedItem.ToString();
+            else
+                SelectFigure = "";
+
+            foreach (Figure f in Enumerable.Where(E.Figures.Values, f => f.Selectable == true))
+                f.Selected = false;
+            if (SelectFigure != "")
+                E.Figures[SelectFigure].Selected = true;
+
+            
+            if (SelectFigure == "") pictureBox2.BackColor = E.BackgroundColor;
+            else pictureBox2.BackColor = E.Figures[SelectFigure].GetBorderColor();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            E.Figures["Axis"].Hidden = !checkBox3.Checked;
+        }
+
+
+        
 
      }
 }

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Graphics3D.Drawing3D
 {
+    [Serializable]
     public class Transformation
     {
         public Transformation() : this(0, 0, 0) { }
@@ -29,6 +30,13 @@ namespace Graphics3D.Drawing3D
             OX = ox;
             OY = oy;
             OZ = oz;
+        }
+
+        public Transformation(Point3D point)
+        {
+            OX = point.X;
+            OY = point.Y;
+            OZ = point.Z;
         }
 
         double ox = 0;

@@ -42,9 +42,10 @@
   <ItemGroup>
     <Compile Include="Drawing3D\Environment.cs" />
     <Compile Include="Drawing3D\Figure.cs" />
+    <Compile Include="Drawing3D\Figures.cs" />
     <Compile Include="Drawing3D\Line.cs" />
-    <Compile Include="Drawing3D\Point2D.cs" />
-    <Compile Include="Drawing3D\Point3D.cs" />
+    <Compile Include="Math3D\Point2D.cs" />
+    <Compile Include="Math3D\Point3D.cs" />
     <Compile Include="Drawing3D\Poligon.cs" />
     <Compile Include="Drawing3D\Transformation.cs" />
     <Compile Include="Drawing3D\Triangle.cs" />

@@ -27,11 +27,7 @@ namespace Graphics3D.Drawing3D
         
         public Color BorderColor
         {
-            get {
-                
-                
-
-                return color; }
+            get { return color; }
             set { color = value; }
         }
 
