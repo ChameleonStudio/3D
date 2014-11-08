@@ -111,6 +111,7 @@ namespace Graphics3D.Drawing3D
                         g.DrawLine(p,
                             new Point3D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + height / 2, 1),
                             new Point3D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + height / 2, 1));
+                        
                         p.Dispose();
                     }
                 }

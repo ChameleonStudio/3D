@@ -34,11 +34,11 @@ namespace Graphics3D.Drawing3D
             return new Point3D(X, Y, Z);
         }
 
-        [XmlAttribute()]
+
         public double X { get; set; }
-        [XmlAttribute()]
+
         public double Y { get; set; }
-        [XmlAttribute()]
+
         public double Z { get; set; }
 
         public static implicit operator PointF(Point3D p)
