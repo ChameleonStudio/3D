@@ -249,16 +249,18 @@ namespace Example
             E.Figures["Axis"].Hidden = !checkBox3.Checked;
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void button5_Click_1(object sender, EventArgs e)
         {
-            Bitmap bit = new Bitmap(1000, 1000);
+            Bitmap bit = new Bitmap(10, 10,System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            
             Graphics g = Graphics.FromImage(bit);
-            for (int i = 0; i < 10; i++)
-                for (int j = 0; j < 10; j++)
-                    if((i+j)%2==0)
-                        g.DrawRectangle(Pens.Black, i, j, 1, 1);
+            for (int i = 0; i < 5; i++)
+                for (int j = 0; j < 5; j++)
+                    if ((i + j) % 2 == 0)
+                        g.DrawRectangle(Pens.Silver, i, j, 1, 1);
             MemoryStream s = new MemoryStream();
             bit.Save(s, System.Drawing.Imaging.ImageFormat.Bmp);
+
         }
 
 

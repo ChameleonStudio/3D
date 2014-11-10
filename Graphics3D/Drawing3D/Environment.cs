@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using Graphics3D.Math3D;
 using System.Drawing;
+using Graphics3D.DepthTest;
 
 namespace Graphics3D.Drawing3D
 {
@@ -86,7 +87,7 @@ namespace Graphics3D.Drawing3D
         double z = -500;
         public Bitmap GetImage(int width, int height)
         {
-            TransformationRefresh();
+           /* TransformationRefresh();
             lastImage = new Size(width, height);
             Bitmap b = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(b);
@@ -116,7 +117,20 @@ namespace Graphics3D.Drawing3D
                     }
                 }
             }catch (Exception){}
-            return b;
+            return b;*/
+            TransformationRefresh();
+            lastImage = new Size(width, height);
+            ZBitmap b = new ZBitmap(width, height, backgroundColor);
+            Random a = new Random();
+                foreach (Figure f in Enumerable.Where(Figures.Values, f => !f.Hidden))
+                {
+                    foreach (Line l in f.Lines)
+                        try{
+                        b.DrawLine(l);
+                        }catch (Exception) { }
+            }
+           
+            return b.Bitmap;
         }
 
         public Figure CheckFigure(Point2D mouse)

@@ -17,9 +17,10 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +45,10 @@
     <Compile Include="Drawing3D\Figure.cs" />
     <Compile Include="Drawing3D\Figures.cs" />
     <Compile Include="Drawing3D\Line.cs" />
+    <Compile Include="DepthTest\Pixel.cs" />
+    <Compile Include="DepthTest\ZBitmap.cs" />
+    <Compile Include="Math3D\Border.cs" />
+    <Compile Include="Math3D\MathUtils.cs" />
     <Compile Include="Math3D\Point2D.cs" />
     <Compile Include="Math3D\Point3D.cs" />
     <Compile Include="Drawing3D\Poligon.cs" />
