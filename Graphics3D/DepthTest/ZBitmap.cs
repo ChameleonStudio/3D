@@ -44,6 +44,7 @@ namespace Graphics3D.DepthTest
         {
             get 
             {
+                g.Clear(backColor);
                 BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
                 int stride = data.Stride;
                 unsafe
@@ -63,6 +64,17 @@ namespace Graphics3D.DepthTest
                     
                 }
                 b.UnlockBits(data);
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (pixels[x, y].Color != backColor) {
+                        pixels[x, y].Depth = Double.MaxValue;
+                        pixels[x, y].Color = backColor;
+                    }
+                    }
+                }
+                
                 return b; 
             }
         }
@@ -83,7 +95,10 @@ namespace Graphics3D.DepthTest
             {
                 for (int x = border.Left; x < border.Right; x++)
                 {
-
+                    if(Math.Sign((P1.X-x)*(P2.Y-P1.Y)-(P2.X-P1.X)*(P1.Y-y)) == Math.Sign((P2.X-x)*(P3.Y-P2.Y)-(P3.X-P2.X)*(P2.Y-y)))
+                        if (Math.Sign((P1.X - x) * (P2.Y - P1.Y) - (P2.X - P1.X) * (P1.Y - y)) == Math.Sign((P3.X - x) * (P1.Y - P3.Y) - (P1.X - P3.X) * (P3.Y - y)))
+                            if (x >= 0 && x < Width && y >= 0 && y < Width)
+                                pixels[x, y].Set(triangle.FillColor, (P1.Z + P2.Z + P3.Z)/3);
                 }
             }
         }
@@ -154,10 +169,6 @@ namespace Graphics3D.DepthTest
                     pixels[x, y] = new Pixel(x, y);
                     pixels[x, y].Color = color;
                 }
-            }
-            foreach(Pixel pixel in pixels)
-            {
-               
             }
             g.Clear(color);
             System.Threading.Thread t = new System.Threading.Thread(()=>System.GC.Collect()); t.Start();

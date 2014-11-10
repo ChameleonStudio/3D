@@ -114,16 +114,36 @@ namespace Graphics3D.Drawing3D
             f.AddLine(1, 2);
             f.AddLine(2, 3);
             f.AddLine(3, 0);
-
+            f.AddTriangle(0, 1, 2);
+            f.Triangles.Last().FillColor = Color.Red;
+            f.AddTriangle(0, 3, 2);
+            f.Triangles.Last().FillColor = Color.Red;
+            f.AddTriangle(0, 1, 5);
+            f.Triangles.Last().FillColor = Color.Green;
+            f.AddTriangle(0, 4, 5);
+            f.Triangles.Last().FillColor = Color.Green;
             f.AddLine(4, 5);
             f.AddLine(5, 6);
             f.AddLine(6, 7);
             f.AddLine(7, 4);
-
+            f.AddTriangle(4, 5, 6);
+            f.Triangles.Last().FillColor = Color.Blue;
+            f.AddTriangle(4, 7, 6);
+            f.Triangles.Last().FillColor = Color.Blue;
+            f.AddTriangle(3, 2, 6);
+            f.Triangles.Last().FillColor = Color.Pink;
+            f.AddTriangle(3, 7, 6);
+            f.Triangles.Last().FillColor = Color.Pink;
             f.AddLine(0, 4);
             f.AddLine(1, 5);
             f.AddLine(2, 6);
             f.AddLine(3, 7);
+            f.AddTriangle(7, 3, 0);
+            f.Triangles.Last().FillColor = Color.Yellow;
+            f.AddTriangle(7, 4, 0);
+            f.Triangles.Last().FillColor = Color.Yellow;
+            f.AddTriangle(1, 2, 6);
+            f.AddTriangle(1, 5, 6);
 
             foreach (Line l in f.Lines)
                 l.BorderColor = color;

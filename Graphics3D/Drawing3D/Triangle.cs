@@ -14,10 +14,10 @@ namespace Graphics3D.Drawing3D
         Vertex p1 = new Vertex(),p2 = new Vertex(),p3 = new Vertex();
      
         Color color = Color.White;
-        public String FillColor
+        public Color FillColor
         {
-            get { return color.Name; }
-            set { color = Color.FromName(value); }
+            get { return color; }
+            set { color = value; }
         }
 
 

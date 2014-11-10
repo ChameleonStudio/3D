@@ -85,7 +85,9 @@ namespace Graphics3D.Drawing3D
         }
         Size lastImage;
         double z = -500;
-        public Bitmap GetImage(int width, int height)
+        ZBitmap b;
+
+        public Bitmap GetImage()
         {
            /* TransformationRefresh();
             lastImage = new Size(width, height);
@@ -118,19 +120,30 @@ namespace Graphics3D.Drawing3D
                 }
             }catch (Exception){}
             return b;*/
+
             TransformationRefresh();
-            lastImage = new Size(width, height);
-            ZBitmap b = new ZBitmap(width, height, backgroundColor);
+           // b = new ZBitmap(width, height, backgroundColor);
             Random a = new Random();
                 foreach (Figure f in Enumerable.Where(Figures.Values, f => !f.Hidden))
                 {
+                    foreach (Triangle t in f.Triangles)
+                        try
+                        {
+                            b.FillTriangle(t);
+                        }
+                        catch (Exception) { }
                     foreach (Line l in f.Lines)
                         try{
                         b.DrawLine(l);
-                        }catch (Exception) { }
-            }
+                        }catch (Exception) { } 
+                }
            
             return b.Bitmap;
+        }
+
+        public void Resize(int width, int height)
+        {
+            b = new ZBitmap(width, height, backgroundColor);
         }
 
         public Figure CheckFigure(Point2D mouse)
@@ -141,8 +154,8 @@ namespace Graphics3D.Drawing3D
                 {
                     foreach (Line l in f.Lines)
                     {
-                        Point2D p1 = new Point2D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + lastImage.Width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + lastImage.Height / 2);
-                        Point2D p2 = new Point2D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + lastImage.Width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + lastImage.Height / 2);
+                        Point2D p1 = new Point2D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + b.Width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + b.Height / 2);
+                        Point2D p2 = new Point2D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + b.Width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + b.Height / 2);
                         if (dist(mouse, p1) + dist(mouse, p2)- 0.3 <= dist(p1, p2) && f.Selectable)
                             return f;
                     }

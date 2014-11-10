@@ -33,7 +33,7 @@ namespace Example
         {
             openFileDialog1.ShowDialog();
             E = Graphics3D.Drawing3D.Environment.Load(openFileDialog1.FileName);
-            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
+            pictureBox1.Image = E.GetImage();
             trackBar4.Value = (int)E.Scale.OX;
             ListUpdate();
             trackBar4.BackColor = E.BackgroundColor;
@@ -69,7 +69,7 @@ namespace Example
                             E.Figures[SelectFigure].RelativeScale(new Transformation(((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1), ((double)trackBar1.Value / 1000 + 1)));
                 }
             }
-            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
+            pictureBox1.Image = E.GetImage();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -81,7 +81,8 @@ namespace Example
             E.AddFigure(o);
 
             E.Scale = trackBar4.Value;
-            pictureBox1.Image = E.GetImage(pictureBox1.Width, pictureBox1.Height);
+            E.Resize(pictureBox1.Width, pictureBox1.Height);
+            pictureBox1.Image = E.GetImage();
             ListUpdate();
         }
 
@@ -261,6 +262,11 @@ namespace Example
             MemoryStream s = new MemoryStream();
             bit.Save(s, System.Drawing.Imaging.ImageFormat.Bmp);
 
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            E.Resize(pictureBox1.Width, pictureBox1.Height);
         }
 
 
