@@ -33,10 +33,12 @@ namespace Example
         {
             openFileDialog1.ShowDialog();
             E = Graphics3D.Drawing3D.Environment.Load(openFileDialog1.FileName);
+            E.Resize(pictureBox1.Width, pictureBox1.Height);
             pictureBox1.Image = E.GetImage();
             trackBar4.Value = (int)E.Scale.OX;
             ListUpdate();
             trackBar4.BackColor = E.BackgroundColor;
+            groupBox2.BackColor = E.BackgroundColor;
             checkBox3.Checked = !E.Figures["Axis"].Hidden;
         }
 
@@ -102,14 +104,32 @@ namespace Example
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                 canRotate = true;
                 start = new Point(e.X, e.Y);
                 OYStart = E.Angle.OY;
                 OXStart = E.Angle.OX;
             }
-            if(e.Button == System.Windows.Forms.MouseButtons.Left)
+            move = false;
+        }
+
+        String SelectFigure = "";
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (canRotate)
+            {
+                move = true;
+                E.Angle.OY = OYStart + (start.X - e.X)/2;
+                E.Angle.OX = OXStart + (start.Y - e.Y)/2;
+            }
+        }
+        bool move = false;
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            canRotate = false;
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && !move)
             {
                 SelectFigure = "";
                 Figure f = E.CheckFigure(new Point2D(e.X, e.Y));
@@ -120,32 +140,14 @@ namespace Example
                         F.Selected = true;
                         SelectFigure = F.Name;
                         pictureBox2.BackColor = F.GetBorderColor();
-                        break;
                     }
                     else
                     {
                         F.Selected = false;
                     }
                 }
-                if(SelectFigure == "") pictureBox2.BackColor = E.BackgroundColor;
+                if (SelectFigure == "") pictureBox2.BackColor = E.BackgroundColor;
             }
-        }
-
-        String SelectFigure = "";
-
-        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (canRotate)
-            {
-                E.Angle.OY = OYStart + (start.X - e.X)/2;
-                E.Angle.OX = OXStart + (start.Y - e.Y)/2;
-            }
-        }
-
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
-        {
-            canRotate = false;
-
         }
 
         private void trackBar4_Scroll(object sender, EventArgs e)
@@ -182,6 +184,8 @@ namespace Example
                     figure.Selected = false;
                 if (SelectFigure != "")
                     E.Figures[SelectFigure].Selected = true;
+
+
             }
 
             namecount++;
@@ -207,9 +211,13 @@ namespace Example
             if (SelectFigure != "")
                 E.Figures[SelectFigure].SetBorderColor(colorDialog1.Color);
             else
+            {
                 E.BackgroundColor = colorDialog1.Color;
+                E.Resize(pictureBox1.Width, pictureBox1.Height);
+            }
 
             trackBar4.BackColor = E.BackgroundColor;
+            groupBox2.BackColor = E.BackgroundColor;
             pictureBox2.BackColor = colorDialog1.Color;
         }
 
@@ -267,6 +275,21 @@ namespace Example
         private void Form1_Resize(object sender, EventArgs e)
         {
             E.Resize(pictureBox1.Width, pictureBox1.Height);
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton5_Click(object sender, EventArgs e)
+        {
+            if (radioButton4.Checked)
+                E.ImageType = ImageType.Poligons;
+            if (radioButton5.Checked)
+                E.ImageType = ImageType.LinesAndPoligons;
+            if (radioButton6.Checked)
+                E.ImageType = ImageType.Lines;
         }
 
 

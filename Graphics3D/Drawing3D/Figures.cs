@@ -114,39 +114,32 @@ namespace Graphics3D.Drawing3D
             f.AddLine(1, 2);
             f.AddLine(2, 3);
             f.AddLine(3, 0);
-            f.AddTriangle(0, 1, 2);
-            f.Triangles.Last().FillColor = Color.Red;
+            f.AddTriangle(1, 0, 2);
             f.AddTriangle(0, 3, 2);
-            f.Triangles.Last().FillColor = Color.Red;
             f.AddTriangle(0, 1, 5);
-            f.Triangles.Last().FillColor = Color.Green;
-            f.AddTriangle(0, 4, 5);
-            f.Triangles.Last().FillColor = Color.Green;
+            f.AddTriangle(4, 0, 5);
             f.AddLine(4, 5);
             f.AddLine(5, 6);
             f.AddLine(6, 7);
             f.AddLine(7, 4);
             f.AddTriangle(4, 5, 6);
-            f.Triangles.Last().FillColor = Color.Blue;
-            f.AddTriangle(4, 7, 6);
-            f.Triangles.Last().FillColor = Color.Blue;
-            f.AddTriangle(3, 2, 6);
-            f.Triangles.Last().FillColor = Color.Pink;
+            f.AddTriangle(7, 4, 6);
+            f.AddTriangle(2, 3, 6);
             f.AddTriangle(3, 7, 6);
-            f.Triangles.Last().FillColor = Color.Pink;
             f.AddLine(0, 4);
             f.AddLine(1, 5);
             f.AddLine(2, 6);
             f.AddLine(3, 7);
             f.AddTriangle(7, 3, 0);
-            f.Triangles.Last().FillColor = Color.Yellow;
-            f.AddTriangle(7, 4, 0);
-            f.Triangles.Last().FillColor = Color.Yellow;
+            f.AddTriangle(4, 7, 0);
             f.AddTriangle(1, 2, 6);
-            f.AddTriangle(1, 5, 6);
+            f.AddTriangle(5, 1, 6);
 
             foreach (Line l in f.Lines)
                 l.BorderColor = color;
+
+            foreach (Triangle t in f.Triangles)
+                t.FillColor = color;
             return f;
         }
 
@@ -173,12 +166,16 @@ namespace Graphics3D.Drawing3D
             {
                 f.AddLine(i, (i + 1) % count);
                 f.Lines[i].BorderColor = color;
+                f.AddTriangle(i,0, (i + 1) % count);
+               
             }
             f.Vertexes.Add(new Vertex(0, 2, 0));
             for (int i = 0; i < count; i++)
             {
                 f.AddLine(i, count);
                 f.Lines.Last().BorderColor = color;
+                f.AddTriangle(count, i, (i + 1) % count);
+               
             }
             f.Vertexes.Add(new Vertex(0, 0, 0));
             for (int i = 0; i < count; i++)
@@ -186,6 +183,9 @@ namespace Graphics3D.Drawing3D
                 f.AddLine(i, count + 1);
                 f.Lines.Last().BorderColor = color;
             }
+
+            foreach (Triangle t in f.Triangles)
+                t.FillColor = color;
             return f;
         }
 
@@ -197,6 +197,7 @@ namespace Graphics3D.Drawing3D
             for (int i = 0; i < count; i++)
             {
                 f.AddLine(i, (i + 1) % count);
+               
                 f.Lines[i].BorderColor = color;
             }
 
@@ -205,6 +206,7 @@ namespace Graphics3D.Drawing3D
             for (int i = count; i < count * 2; i++)
             {
                 f.AddLine(i, count + (i + 1) % count);
+                f.AddTriangle(count + (i + 1) % count, i, (i + 1) % count);
                 f.Lines.Last().BorderColor = color;
             }
 
@@ -212,6 +214,7 @@ namespace Graphics3D.Drawing3D
             for (int i = 0; i < count; i++)
             {
                 f.AddLine(i, i + count);
+                f.AddTriangle(count + i, i, (i + 1) % count);
                 f.Lines.Last().BorderColor = color;
             }
 
@@ -221,22 +224,25 @@ namespace Graphics3D.Drawing3D
             {
                 f.AddLine(i, count * 2);
                 f.Lines.Last().BorderColor = color;
+                f.AddTriangle(i, count * 2, (i + 1) % count);
             }
 
             f.Vertexes.Add(new Vertex(0, 2, 0));
             for (int i = 0; i < count; i++)
             {
                 f.AddLine(count + i, count * 2 + 1);
+                f.AddTriangle(count * 2 + 1,count + i, count + (i + 1) % count);
                 f.Lines.Last().BorderColor = color;
             }
-
+            foreach (Triangle t in f.Triangles)
+                t.FillColor = color;
             return f;
         }
-
+       
         public static Figure Sphere(String name, Color color, int count = 30)
         {
             Figure f = new Figure(name);
-
+       
             for (int j = 1; j < count; j++)
             {
                 for (int i = 0; i < count; i++)
@@ -245,8 +251,14 @@ namespace Graphics3D.Drawing3D
                 {
                     f.AddLine(i, (j - 1) * count + (i + 1) % count);
                     f.Lines.Last().BorderColor = color;
+                    
+                    
                     if (j != 1)
                     {
+                        f.AddTriangle(i, (j - 1) * count + (i + 1) % count, i - count);
+
+                        f.AddTriangle((j - 1) * count + (i + 1) % count - count, i - count, (j - 1) * count + (i + 1) % count);
+
                         f.AddLine(i - count, i);
                         f.Lines.Last().BorderColor = color;
                     }
@@ -258,21 +270,27 @@ namespace Graphics3D.Drawing3D
 
             for (int i = 0; i < count; i++)
             {
-                f.AddLine(i, count * (count - 1));
+                f.AddLine(i, count * (count - 1));   
                 f.Lines.Last().BorderColor = color;
+
+                f.AddTriangle((i + 1) % count, count * (count - 1), i);
             }
 
             for (int i = count * (count - 2); i < count * (count - 1); i++)
             {
                 f.AddLine(i, count * (count - 1) + 1);
+
+                f.AddTriangle(count * (count - 2) + (i + 1) % count, i, count * (count - 1) + 1);
                 f.Lines.Last().BorderColor = color;
             }
-
+            foreach (Triangle t in f.Triangles)
+                t.FillColor = color;
             return f;
         }
 
         public static Figure Torus(String name, Color color, int count = 30, double radius = 2)
         {
+            Random a = new Random();
             Figure f = new Figure(name);
             for (int j = 0; j < count; j++)
             {
@@ -284,6 +302,8 @@ namespace Graphics3D.Drawing3D
                     f.Lines.Last().BorderColor = color;
                     if (j != 0)
                     {
+                        f.AddTriangle(i, j * count + (i + 1) % count, i - count);
+                        f.AddTriangle(j * count + (i + 1) % count - count, i - count, j * count + (i + 1) % count);
                         f.AddLine(i - count, i);
                         f.Lines.Last().BorderColor = color;
                     }
@@ -291,14 +311,22 @@ namespace Graphics3D.Drawing3D
             }
             for (int i = 0; i < count; i++)
             {
-                f.AddLine(i, i + count * (count -1));
-                    f.Lines.Last().BorderColor = color;
+
+                f.AddTriangle(i + count * (count - 1), i, (i + 1) % count);
+
+                f.AddTriangle((i + 1) % count + count * (count - 1), i + count * (count - 1), (i + 1) % count);
+
+                f.AddLine(i, i + count * (count - 1));
+                f.Lines.Last().BorderColor = color;
             }
+            foreach (Triangle t in f.Triangles)
+                t.FillColor = color;
             return f;
         }
 
         public static Figure Tube(String name, Color color, int count = 30,double radius = 0.75)
         {
+            Random a = new Random();
             Figure f = new Figure(name);
             for (int i = 0; i < count; i++)
                 f.Vertexes.Add(new Vertex(Math.Sin(Math.PI * 2 * i / count), 0, Math.Cos(Math.PI * 2 * i / count)));
@@ -320,6 +348,10 @@ namespace Graphics3D.Drawing3D
             for (int i = 0; i < count; i++)
             {
                 f.AddLine(i, i + count);
+                f.AddTriangle((i + 1) % count,i, count + (i + 1) % count);
+
+                f.AddTriangle(count + (i + 1) % count,i, count + i);
+           
                 f.Lines.Last().BorderColor = color;
             }
 
@@ -338,6 +370,9 @@ namespace Graphics3D.Drawing3D
             {
                 f.AddLine(i, count * 3 + (i + 1) % count);
                 f.Lines.Last().BorderColor = color;
+
+                f.AddTriangle(       count * 3 + (i + 1) % count, i, i - count);
+                f.AddTriangle(count * 2 + (i + 1) % count,count * 3 + (i + 1) % count, i - count);
             }
 
 
@@ -345,6 +380,12 @@ namespace Graphics3D.Drawing3D
             {
                 f.AddLine(i, i + count);
                 f.Lines.Last().BorderColor = color;
+
+
+                f.AddTriangle(count * 2 + (i + 1) % count,i, i - count*2);
+                f.AddTriangle((i + 1) % count,count * 2 + (i + 1) % count, i - count*2);
+                
+              
             }
 
             for (int i = 0; i < count; i++)
@@ -357,8 +398,11 @@ namespace Graphics3D.Drawing3D
             {
                 f.AddLine(i, i + count * 2);
                 f.Lines.Last().BorderColor = color;
+                f.AddTriangle(i + count*2, count*3 + (i + 1) % count, i);
+                f.AddTriangle(count * 3 + (i + 1) % count,count+(i+1)%count, i);
             }
-
+            foreach (Triangle t in f.Triangles)
+                t.FillColor = color;
             return f;
         }
     }

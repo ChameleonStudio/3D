@@ -48,7 +48,10 @@ namespace Graphics3D.Drawing3D
             {
                 l.BorderColor = color;
             }
-
+            foreach (Triangle t in Triangles)
+            {
+                t.FillColor = color;
+            }
         }
         public Color GetBorderColor()
         {

@@ -16,9 +16,21 @@ using Graphics3D.DepthTest;
 namespace Graphics3D.Drawing3D
 {
     [Serializable]
+    public enum ImageType
+    {
+        Poligons,Lines,LinesAndPoligons
+    }
+    [Serializable]
     public class Environment
     {
         Dictionary<String,Figure> figures = new Dictionary<String, Figure>();
+        ImageType imageType = ImageType.LinesAndPoligons;
+
+        public ImageType ImageType
+        {
+            get { return imageType; }
+            set { imageType = value; }
+        }
 
         public Dictionary<String, Figure> Figures
         {
@@ -83,59 +95,65 @@ namespace Graphics3D.Drawing3D
         {
             transform(Matrix.GetRotationOZMatrix(Angle.OZ) * Matrix.GetRotationOYMatrix(Angle.OY) * Matrix.GetRotationOXMatrix(Angle.OX), Matrix.GetScaleMatrix(Scale), Matrix.GetTranslateMatrix(Translate));
         }
-        Size lastImage;
         double z = -500;
+
+        [NonSerialized]
         ZBitmap b;
 
         public Bitmap GetImage()
         {
-           /* TransformationRefresh();
-            lastImage = new Size(width, height);
-            Bitmap b = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(b);
-            g.Clear(backgroundColor);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            
-            Random a = new Random();
-            try
-            {
+            TransformationRefresh();
                 foreach (Figure f in Enumerable.Where(Figures.Values, f => !f.Hidden))
                 {
-                    float w = 1;
+                    int w = 1;
                     if (f.Selected)
                     {
                         w = 2;
                     }
-                    foreach (Line l in f.Lines)
+                    switch(imageType)
                     {
-                        
-                        Pen p = new Pen(l.BorderColor, w);
-                        p.DashStyle = l.Type;
-                        g.DrawLine(p,
-                            new Point3D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + height / 2, 1),
-                            new Point3D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + height / 2, 1));
-                        
-                        p.Dispose();
+                        case Drawing3D.ImageType.Lines:
+                            foreach (Line l in f.Lines)
+                                try
+                                {
+                                    b.DrawLine(l, w);
+                                }
+                                catch (Exception) { }
+                            break;
+                        case Drawing3D.ImageType.Poligons:
+                            foreach (Triangle t in f.Triangles)
+                                try
+                                {
+                                    b.FillTriangle(t);
+                                }
+                                catch (Exception) { }
+                            if (f.Name == "Axis" || f.Selected)
+                            {
+                                foreach (Line l in f.Lines)
+                                    try
+                                    {
+                                        b.DrawLine(l, w);
+                                    }
+                                    catch (Exception) { }
+                            }
+                            break;
+                        case Drawing3D.ImageType.LinesAndPoligons:
+                            foreach (Line l in f.Lines)
+                                try
+                                {
+                                    b.DrawLine(l, w);
+                                }
+                                catch (Exception) { }
+                            foreach (Triangle t in f.Triangles)
+                                try
+                                {
+                                    b.FillTriangle(t);
+                                }
+                                catch (Exception) { }
+                            break;
                     }
-                }
-            }catch (Exception){}
-            return b;*/
-
-            TransformationRefresh();
-           // b = new ZBitmap(width, height, backgroundColor);
-            Random a = new Random();
-                foreach (Figure f in Enumerable.Where(Figures.Values, f => !f.Hidden))
-                {
-                    foreach (Triangle t in f.Triangles)
-                        try
-                        {
-                            b.FillTriangle(t);
-                        }
-                        catch (Exception) { }
-                    foreach (Line l in f.Lines)
-                        try{
-                        b.DrawLine(l);
-                        }catch (Exception) { } 
+                   
+                   
                 }
            
             return b.Bitmap;
@@ -148,21 +166,56 @@ namespace Graphics3D.Drawing3D
 
         public Figure CheckFigure(Point2D mouse)
         {
-            try
-            {
-                foreach (Figure f in Figures.Values)
-                {
-                    foreach (Line l in f.Lines)
+                    Figure ans = null;
+                    if(ImageType != Drawing3D.ImageType.Poligons){
+                    try
                     {
-                        Point2D p1 = new Point2D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + b.Width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + b.Height / 2);
-                        Point2D p2 = new Point2D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + b.Width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + b.Height / 2);
-                        if (dist(mouse, p1) + dist(mouse, p2)- 0.3 <= dist(p1, p2) && f.Selectable)
-                            return f;
+                        foreach (Figure f in Figures.Values)
+                        {
+                            foreach (Line l in f.Lines)
+                            {
+                                Point2D p1 = new Point2D(l.P1.TPoint.X * (z / (z - l.P1.TPoint.Z)) + b.Width / 2, -l.P1.TPoint.Y * (z / (z - l.P1.TPoint.Z)) + b.Height / 2);
+                                Point2D p2 = new Point2D(l.P2.TPoint.X * (z / (z - l.P2.TPoint.Z)) + b.Width / 2, -l.P2.TPoint.Y * (z / (z - l.P2.TPoint.Z)) + b.Height / 2);
+                                if (dist(mouse, p1) + dist(mouse, p2)- 0.3 <= dist(p1, p2) && f.Selectable)
+                                    return f;
+                            }
+                        }
                     }
-                }
-            }
-            catch (Exception) {}
-            return null;
+        
+
+                    catch (Exception) {}
+                    }else{
+                    double depth = double.MaxValue;
+            
+                    foreach (Figure f in Figures.Values)
+                    {
+                        foreach (Triangle triangle in f.Triangles)
+                        {
+                            Point3D P1 =  new Point3D(triangle.P1.TPoint.X * (z / (z - triangle.P1.TPoint.Z)) + b.Width / 2, -triangle.P1.TPoint.Y * (z / (z - triangle.P1.TPoint.Z)) + b.Height / 2, triangle.P1.TPoint.Z);
+                            Point3D P2 =  new Point3D(triangle.P2.TPoint.X * (z / (z - triangle.P2.TPoint.Z)) + b.Width / 2, -triangle.P2.TPoint.Y * (z / (z - triangle.P2.TPoint.Z)) + b.Height / 2, triangle.P2.TPoint.Z);
+                            Point3D P3 =  new Point3D(triangle.P3.TPoint.X * (z / (z - triangle.P3.TPoint.Z)) + b.Width / 2, -triangle.P3.TPoint.Y * (z / (z - triangle.P3.TPoint.Z)) + b.Height / 2, triangle.P3.TPoint.Z);
+                            double A11, A12, A13;
+                            double A,B,C,D;
+                            A11 = (P2.Y - P1.Y) * (P3.Z - P1.Z) - (P2.Z - P1.Z) * (P3.Y - P1.Y);
+                            A12 = (P2.X - P1.X) * (P3.Z - P1.Z) - (P2.Z - P1.Z) * (P3.X - P1.X);
+                            A13 = (P2.X - P1.X) * (P3.Y - P1.Y) - (P2.Y - P1.Y) * (P3.X - P1.X);
+                            A = A11;
+                            B = -A12;
+                            C = A13;
+                            D = -P1.X * A11 + P1.Y * A12 - P1.Z * A13;
+                            if (Math.Sign((P1.X - mouse.X) * (P2.Y - P1.Y) - (P2.X - P1.X) * (P1.Y - mouse.Y)) == Math.Sign((P2.X - mouse.X) * (P3.Y - P2.Y) - (P3.X - P2.X) * (P2.Y - mouse.Y)))
+                                if (Math.Sign((P1.X - mouse.X) * (P2.Y - P1.Y) - (P2.X - P1.X) * (P1.Y - mouse.Y)) == Math.Sign((P3.X - mouse.X) * (P1.Y - P3.Y) - (P1.X - P3.X) * (P3.Y - mouse.Y)))
+                                {
+                                    if(depth > (-A * mouse.X - B * mouse.Y - D) / C)
+                                    {
+                                        depth = (-A * mouse.X - B * mouse.Y - D) / C;
+                                        ans = f;
+                                    }
+                                }     
+                        }
+                    }
+        }
+                    return ans;
         }
 
         private double dist(Point2D p1, Point2D p2)

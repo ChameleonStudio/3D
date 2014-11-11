@@ -6,6 +6,7 @@ using System.Drawing;
 
 namespace Graphics3D.DepthTest
 {
+    [Serializable]
     public class Pixel
     {
         public Pixel(int x,int y,double depth = Double.MaxValue)
@@ -37,7 +38,7 @@ namespace Graphics3D.DepthTest
 
         public void Set(Color color, double depth)
         {
-            if (depth < Depth)
+            if (depth <= Depth)
             {
                 this.col = color;
                 this.depth = depth;
@@ -51,9 +52,5 @@ namespace Graphics3D.DepthTest
             set { depth = value; }
         }
 
-        public void AddColor(Color color)
-        {
-            //col = Color.FromArgb(255,col.A/255)
-        }
     }
 }
