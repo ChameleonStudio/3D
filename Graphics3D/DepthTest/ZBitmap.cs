@@ -88,7 +88,7 @@ namespace Graphics3D.DepthTest
         public void FillTriangle(Triangle triangle)
         {
             Point3D lightnes = new Point3D(-1, 1, -0.5);
-
+            double currentDepth;
             Point3D P1 =  new Point3D(triangle.P1.TPoint.X * (z / (z - triangle.P1.TPoint.Z)) + width / 2, -triangle.P1.TPoint.Y * (z / (z - triangle.P1.TPoint.Z)) + height / 2, triangle.P1.TPoint.Z);
             Point3D P2 =  new Point3D(triangle.P2.TPoint.X * (z / (z - triangle.P2.TPoint.Z)) + width / 2, -triangle.P2.TPoint.Y * (z / (z - triangle.P2.TPoint.Z)) + height / 2, triangle.P2.TPoint.Z);
             Point3D P3 =  new Point3D(triangle.P3.TPoint.X * (z / (z - triangle.P3.TPoint.Z)) + width / 2, -triangle.P3.TPoint.Y * (z / (z - triangle.P3.TPoint.Z)) + height / 2, triangle.P3.TPoint.Z);
@@ -125,8 +125,11 @@ namespace Graphics3D.DepthTest
                         endx+=2;
                         for (int x = startx; x < endx; x++)
                             if (x >= 0 && x < Width)
-                                pixels[x, y].Set(Color.FromArgb(255, (int)((double)triangle.FillColor.R / 255.0 * fi), (int)((double)triangle.FillColor.G / 255.0 * fi), (int)((double)triangle.FillColor.B / 255.0 * fi)), (-A * x - B * y - D) / C);
-                    }
+                            {
+                                currentDepth = (-A * x - B * y - D) / C;
+                                pixels[x, y].Set(Color.FromArgb(255, (int)((double)triangle.FillColor.R / 255.0 * fi), (int)((double)triangle.FillColor.G / 255.0 * fi), (int)((double)triangle.FillColor.B / 255.0 * fi)), currentDepth);
+                            }
+                            }
                 }
             }
         }
@@ -149,7 +152,7 @@ namespace Graphics3D.DepthTest
         double z = -500;
         public void DrawLine(Line line, int w = 1)
         {
-            
+            double currentDepth;
             Point3D P1 =  new Point3D(line.P1.TPoint.X * (z / (z - line.P1.TPoint.Z)) + width / 2, -line.P1.TPoint.Y * (z / (z - line.P1.TPoint.Z)) + height / 2, line.P1.TPoint.Z);
             Point3D P2 =  new Point3D(line.P2.TPoint.X * (z / (z - line.P2.TPoint.Z)) + width / 2, -line.P2.TPoint.Y * (z / (z - line.P2.TPoint.Z)) + height / 2, line.P2.TPoint.Z);
             
@@ -171,16 +174,18 @@ namespace Graphics3D.DepthTest
                int oldKl = kl;
                s = (incr1 = 2*dy)-dx;
                incr2 = 2*dx;
-               if (xn >= 0 && xn < Width && yn >= 0 && yn < Width)
-                   if (w == 1)
-                       pixels[xn, yn].Set(line.BorderColor, P2.Z);
-                   else
-                   {
-                       pixels[xn, yn].Set(line.BorderColor, P2.Z);
-                       if (xn+1 < Width) pixels[xn + 1, yn].Set(line.BorderColor, P2.Z);
-                       if (yn + 1 < Height && xn + 1 < Width) pixels[xn + 1, yn + 1].Set(line.BorderColor, P2.Z);
-                       if (yn + 1 < Height) pixels[xn, yn + 1].Set(line.BorderColor, P2.Z);
-                   }
+               currentDepth = P1.Z;
+
+                   if (xn >= 0 && xn < Width && yn >= 0 && yn < Width)
+                       if (w == 1)
+                           pixels[xn, yn].Set(line.BorderColor, currentDepth);
+                       else
+                       {
+                           pixels[xn, yn].Set(line.BorderColor, currentDepth);
+                           if (xn + 1 < Width) pixels[xn + 1, yn].Set(line.BorderColor, currentDepth);
+                           if (yn + 1 < Height && xn + 1 < Width) pixels[xn + 1, yn + 1].Set(line.BorderColor, currentDepth);
+                           if (yn + 1 < Height) pixels[xn, yn + 1].Set(line.BorderColor, currentDepth);
+                       }
 
             while (--kl >= 0) 
             {
@@ -190,15 +195,17 @@ namespace Graphics3D.DepthTest
                 }
                 if (swap > 0) yn+= sy; else xn+= sx;
                     s+=  incr1;
+
+                currentDepth = P2.Z + ((P1.Z - P2.Z) / (double)oldKl) * (double)kl;
                 if (xn >= 0 && xn < Width && yn >= 0 && yn < Width)
                     if(w==1)
-                        pixels[xn, yn].Set(line.BorderColor, P2.Z + ((P1.Z - P2.Z) / (double)oldKl) * (double)kl);
+                        pixels[xn, yn].Set(line.BorderColor, currentDepth);
                     else
                     {
-                        pixels[xn, yn].Set(line.BorderColor, P2.Z + ((P1.Z - P2.Z) / (double)oldKl) * (double)kl);
-                        if (xn + 1 < Width) pixels[xn + 1, yn].Set(line.BorderColor, P2.Z + ((P1.Z - P2.Z) / (double)oldKl) * (double)kl);
-                        if (yn + 1 < Height && xn + 1 < Width) pixels[xn + 1, yn + 1].Set(line.BorderColor, P2.Z + ((P1.Z - P2.Z) / (double)oldKl) * (double)kl);
-                        if (yn + 1 < Height) pixels[xn, yn + 1].Set(line.BorderColor, P2.Z + ((P1.Z - P2.Z) / (double)oldKl) * (double)kl);
+                        pixels[xn, yn].Set(line.BorderColor, currentDepth);
+                        if (xn + 1 < Width) pixels[xn + 1, yn].Set(line.BorderColor, currentDepth);
+                        if (yn + 1 < Height && xn + 1 < Width) pixels[xn + 1, yn + 1].Set(line.BorderColor, currentDepth);
+                        if (yn + 1 < Height) pixels[xn, yn + 1].Set(line.BorderColor, currentDepth);
                     }
 
             }
